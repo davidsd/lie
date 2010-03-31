@@ -1,0 +1,2 @@
+LD=actual directory gets substituted here
+exec $LD/Lie.exe initfile $LD

@@ -1,0 +1,53 @@
+This file is part of the distribution of the software package LiE.
+It applies to the compile-only version of LiE; if you should wish to read
+the source files, you are advised to obtain the documented version instead.
+
+The program LiE is a stand-alone application. One does need the GNU parser
+generator program 'bison' to install it (in principle the standard UNIX tool
+'yacc' should also work, but Berkeley yacc will produce code that does not
+compile; Linux users take note). LiE is also configured to make use of the GNU
+command line preprocessor 'readline' if it is installed as a library on our
+system. The compliation process is to be controlled by GNU 'make'.
+
+If you have the GNU C-compiler gcc, then there should be no need to alter the
+Makefile provided with LiE. If you do not, you can substitute the name of
+another compiler after 'CC =' in the makefile, and check that the flags
+specified (notably -ansi for strict ANSI/ISO C compilation) follow the option
+syntax of that compiler; you may also to specify some additional options.
+
+
+Having done this, type `make' and sit back; hopefully everything now works
+automatically.
+
+What happens is that first all source files for LiE are compiled, and linked
+to the executable file `Lie.exe'; two small indexing programs `infoind' and
+`learnind' are also compiled. Then the indexing programs are run to create
+index files for the help system. Finally `Lie.exe' is invoked to run a script
+(progs/maxsub) which does some computations and then writes a small data base
+file (INFO.a) that can be accessed by some of LiE's functions. When this all
+succeeds, one has a fully functional version of LiE, that can be called as
+`lie' if the file of that name (a small shell script created during the build
+process) can be found in the search path for commands (you may need to move it
+to a suitable directory, where it will still find the necessary files from
+LiE).
+
+If you do not have the GNU readline library on your system, you may experience
+problems during the linking of the executable file Lie.exe. In that case you
+can say 'make noreadline' instead of 'make', and it should produce a version
+without command line preprocessing.
+
+There is also a special version of LiE that is modified to be callable from
+the GAP package; it has a slightly modified output routine and no command
+line preprocessor. To build it, say `make Liegap.exe', and an executable
+file of that name will be built. To use it from GAP, you will need the two
+GAP source files in the `gapfiles' subdirectory. You can move these to a
+place where GAP can find them, and edit the line starting with `EXEC' near
+the end of `liegap.g' such that the `cd LiE' command makes the correct
+directory change to the LiE source directory. Then you can call any LiE
+function from GAP by prefixing its name with "Lie", for instance `LieCartan'
+or `Lietensor'; you may study the function definitions in `lie.g' for the
+interface conventions used by GAP.
+
+Last modified April 2000
+Marc van Leeuwen, Poitiers
+

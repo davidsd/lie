@@ -1,0 +1,8 @@
+.DS_Store
+*.o
+*.so
+*~
+
+# generated files
+lie.c
+INFO.a
