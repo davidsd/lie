@@ -91,7 +91,7 @@ some debugging.
 Credits
 -------
 
-Written by David Simmons-Duffin in 2009 for use in:
+Written by [David Simmons-Duffin](http://davidsd.org) in 2009 for use in:
  
  - D. Poland and D. Simmons-Duffin, "Superconformal Flavor Simplified,"
    arXiv:0910.4585 [hep-ph].
