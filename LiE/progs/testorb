@@ -1,0 +1,5 @@
+testorb(grp g)=
+{ for r row id(Lie_rank(g))
+do W_orbit(r,g); W_rt_orbit(r,g) od
+; print("group "+g+" OK")
+}

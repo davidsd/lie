@@ -1,0 +1,599 @@
+@matrix
+Matrix   A matrix can either be interpreted as a linear transformation
+   (acting by right-multiplication on row vectors), or as a set of vectors,
+   in which case each row of the matrix represents a vector in the set,
+   or in a special way such as a character table. For instance, a matrix
+   representing a set of roots will be termed a root matrix.  See also
+   orbit matrix and restriction matrix.
+@polynomial
+Polynomial   A polynomial may either just represent itself, i.e., a Lau-
+   rent polynomial (for instance in the case of the Kazhdan-Lusztig poly-
+   nomials, which incidentally are always ordinary polynomials), or it
+   may encode a set of vectors of equal size, with multiplicities.  In the
+   latter case each term represents the occurrence of its exponent in the
+   indicated set (such exponents are always interpreted as a weights),
+   occurring with multiplicity equal to the coefficient of the term.  On
+   their turn, sets of weights with multiplicities may have different in-
+   terpretations, leading to a further distinction between polynomials.
+   Three important such interpretations are that of decomposition poly-
+   nomials, character polynomials, and dominant character polynomials.
+@vector
+Vector   A vector may represent an element of a vector space (or rather
+   of a free Z-module, since its entries must be integral), such as the
+   weight space, or it may just be interpreted as a set or sequence of
+   integers.  In the former case it is always to be interpreted as a row
+   vector, so that matrices are to be applied from the right.  In either
+   case there are a further distinctions as to how the vector is to be
+   interpreted. See also root vector, weight vector, Weyl word, partition
+   and toral element.
+@central torus
+Central torus   The center of any reductive Lie group g is the direct
+   product of a torus and a finite group, the former (which is clearly the
+   connected component of the center) is called the central torus of g.
+   For the groups LiE deals with this central torus is even a direct factor
+   of g itself, the other factor being the semisimple part of g.
+@diagram
+Diagram   The (Dynkin) diagram of a semisimple Lie group is a graph
+   indicating the isomorphism type of the group, the number of vertices
+   is equal to the (semisimple) Lie rank, and the number of connected
+   components of the diagram is equal to the number of simple factors
+   of the group. The vertices are labeled with positive integer numbers,
+   following the conventions of . The diagram represents the information
+   contained in the Cartan matrix of the group in a compact form.
+@fundamental lie subgroup
+Fundamental Lie subgroup   A closed subgroup h of a Lie group g is
+   called fundamental if it contains a maximal torus of g. If h contains T
+   and is reductive, it is determined by the set of roots in the root system
+    of g that are also roots of h, these form a closed subsystem of roots.
+@general linear group
+General  Linear  group   The group of all invertible linear transfor-
+   mations of a vector space V  is called the general linear group of V ,
+   written GL(V ). Up to isomorphism this depends only on n = dim V ,
+   and this group is also written as GL(n, C) (assuming the vector space
+   is over C).  This group is a Lie group, and any Lie group homomor-
+   phism of some Lie group g to GL(V ) is called a representation of that
+   Lie group on the vector space V . See also special linear group.
+@lie algebra
+Lie algebra   A finite-dimensional vector space V  supplied with a bi-
+   linear operation [  ,  ]: V*V->V  satisfying [x, y]  =  - [y, x] and
+   [[x, y], z]+[[y, z], x]+[[z, x], y] = 0 for all x, y, z element V 
+   (anti-commutativity and the Jacobi identity, respectively) is called a 
+   Lie algebra.  
+   Every Lie group defines a Lie algebra structure on the tangent space to the
+   group at the identity element. Although Lie algebras play no explicit
+   role in this package, the representation theory of simply connected
+   reductive complex Lie groups which LiE deals with coincides with the
+   representation theory of reductive Lie algebras over C.
+@lie group   
+Lie  group   A group is called a Lie group if its underlying set is a
+   differentiable variety, and the multiplication and inversion maps are
+   differentiable.  The group is called complex, connected, simply con-
+   nected, etc., if the variety is respectively complex, connected, simply
+   connected, etc.  Each reductive complex Lie group is an algebraic
+   group and the representation theory can be dealt with in an entirely
+   algebraic manner.
+@lie rank
+Lie rank   The dimension of a maximal torus of g is called the Lie rank
+   of g.
+@maximal torus
+Maximal torus   A torus that is not properly contained in any other
+   torus within g is called a maximal torus of g.  If g is a reductive Lie
+   group, such tori exist and any two are conjugate.  In LiE, we always
+   assume a fixed maximal torus T of g to be chosen, weights and roots
+   are defined with respect to T .
+@reductive group
+Reductive group   A group is reductive if each of its finite dimensional
+   representations decomposes into a direct sum of irreducible represen-
+   tations. A connected reductive complex Lie group g is isomorphic to
+   the quotient of the direct product of a simply connected semisimple
+   group and a torus by a finite central subgroup.  An example is the
+   General Linear group GL(n, C). The (images of) the semisimple fac-
+   tor and the torus can be found as the commutator subgroup g0 of g
+   and the central torus of g respectively. In LiE, the type group always
+   refers to a group that itself is a direct product of a simply connected
+   semisimple group and a torus (so no quotient is involved).
+@semisimple element
+Semisimple element   All conjugates of elements of the torus T  are
+   called semisimple elements (not to be confused with the term semi-
+   simple for groups), in any representation of g they correspond to diag-
+   onalisable transformations. Hence each conjugacy class of semisimple
+   elements has representatives in T , and some elements of T  namely
+   those of finite order, can be represented in LiE,  see in Section 3.2
+   under toral element.
+@semisimple group
+Semisimple group   A connected reductive Lie group is called semi-
+   simple if it contains no non-trivial central torus, or equivalently if it is
+   equal to its commutator subgroup. Note that a non-trivial semisimple
+   group necessarily contains non-semisimple elements.
+@semisimple rank
+Semisimple rank   The semisimple rank of a group g is the Lie rank
+   of its semisimple part, or stated differently, the Lie rank of g minus
+   the dimension of its central torus.
+@special linear group
+Special Linear group   For a vector space M the Special Linear group
+   SL(M ) is the closed Lie subgroup of the General Linear group GL(M )
+   of all transformations with determinant equal to 1. It is the commu-
+   tator subgroup of GL(M ).
+@torus
+Torus   A group which is isomorphic to (C*)^n  for some n is called a
+   torus (plural: tori), it is a reductive Lie group of dimension n.  Any
+   closed connected subgroup of a Lie group g all of whose elements are
+   semisimple is a torus, called a torus of g. Every torus of g is contained
+   in a maximal torus, and every maximal torus is conjugate to T , the
+   fixed maximal torus.  See also semisimple element.  A fundamental
+   property of a torus is that all of its irreducible representations are 1-
+   dimensional. Since in such a representation of T each element acts as
+   a scalar, the representation is essentially given by an algebraic group
+   morphism T->C* , a so-called weight. Any representation of g may
+   be restricted to a representation of T , as such it decomposes into 1-
+   dimensional representations.  The resulting formal sum of weights is
+   called the (formal) character of the representation with respect to T .
+   This formal sum of weights can be represented by a polynomial, which
+   is then called a character polynomial.
+@cartan matrix
+Cartan matrix   The matrix  (ai, aj) 1<=i,j<=s  is called the Cartan ma-
+   trix (of the semisimple part) of g, its rows express the fundamental
+   roots on the basis of fundamental weights.
+@cartan type
+Cartan type   The Cartan type of a closed subsystem  of roots of
+   is the type of the fundamental Lie subgroup of g whose root system
+   is .
+@closed subsystem
+Closed subsystem   Given a root system R, a closed subsystem S 1 is a
+   subset  that is itself a root system, and has the property that when-
+   ever ai + bi element   for ai, bi element R then ai + bi element S . 
+   If R is the root system of g, then every closed subsystem corresponds 
+   to a fundamental Lie subgroup of g.
+@fundamental reflection
+Fundamental reflection  For a chosen set of fundamental roots a1,...,as
+   the reflections in the hyperplanes perpendicular to these roots are
+   called fundamental reflections, they are often denoted by r1,...,rs.
+   These reflections generate the Weyl group.
+@fundamental root
+Fundamental root   It is often assumed that a subset of the roots has
+   been chosen as the set of fundamental roots, which are then denoted
+   by a1 ,..., as.  This set must form a basis of the root lattice such
+   that any root can be expressed as a linear combination of them with
+   either all positive or all negative integer coefficients. This is the basis
+   on which root vectors are expressed.  The function inprod  gives a
+   W-invariant inner product for weights on this basis.
+@fundamental weight
+Fundamental weight   For a chosen set of fundamental roots there
+   is a basis of the weight lattice consisting of weights w1,..,wr such
+   that <wi, aj> = delta(i,j) for all i,j element {1 ,.., s}. These weights are 
+   called the fundamental weights. It is this basis on which weight vectors are
+   expressed.
+@highest root   
+Highest root    This is the maximum of the set of roots with respect to the
+   height partial ordering: lambda is higher than mu iff lambda-mu is a sum
+   of positive roots. It is the highest weight of the adjoint representation.
+@levi subgroup
+Levi subgroup   Any subset of the set of fundamental roots determines
+   a closed subsystem (of which it is a basis fundamental roots) of the
+   root system, and the fundamental Lie subgroup corresponding to this
+   subsystem is called a Levi subgroup of g.  The Dynkin diagrams of
+   the Levi subgroups of g are therefore obtained by taking subsets of
+   nodes of the diagram of g and retaining the edges between elements
+   of the subset.
+
+@one parameter subgroup
+One  parameter subgroup   Any 1-dimensional subtorus h of T  is
+   called a one parameter subgroup, there is an algebraic group isomor-
+   phism phi: C* -> h. Such one parameters subgroups may be represented
+   in the following way, which is very similar to the representation of toral
+   elements. For 1<= i <= r we have a group homomorphism z -> phi(z)^wi
+   from C* to C* ; this homomorphism is equal to the map z ^ ai for
+   some ai element Z.  The one parameter subgroup h is now represented by
+   the vector [a1,...,:ar, 0]. The final 0 serves to distinguish it from toral
+   elements, which are valid in the same positions where one parameter
+   subgroups may be used (e.g., as parameter to cent_roots). The integers
+   a1 ... ar should not all have a non-trivial factor in common, because
+   the morphism phi would then fail to be injective.  Any toral element
+   obtained by substituting some number n for the final zero lies in h (it
+   is phi(zeta_n) where zeta_2 = exp(2*Pi*I/n).  The restriction matrix of h 
+   is obtained by arranging the ai (for i = 1, 2, : :,:r) vertically into a 
+   one-column matrix.
+@positive root
+Positive root   A root that can be expressed as a linear combination of
+   fundamental roots with non-negative coefficients is called a positive
+   root. For every root a exactly one of { a, -a} is positive.
+@root
+Root   A non-zero weight for the adjoint representation of g is called a
+   root of g.  For each root the orthogonal reflection in the hyperplane
+   perpendicular to it preserves the weight lattice.
+@root lattice
+Root  lattice   The sublattice of the weight lattice generated by the
+   roots of g is called the root lattice.  For semisimple groups the root
+   lattice has finite index in the weight lattice, for simple groups of type
+   An , Bn , Cn , Dn , En , F4 and G2 this index is n + 1, 2, 2, 4, 9  n,
+   1 and 1 respectively. The fundamental roots form a basis of the root
+   lattice, and the elements of the root lattice are root vectors. See also
+   weight.
+@root matrix
+Root matrix   A root matrix is a matrix whose rows specify a set of
+   roots, represented as root vectors.  Root matrices may be used to
+   denote subsystems of the root system of g.
+@root system
+Root system   The set of all roots is called the root system of g. It is
+   usually denoted by phi.
+@root vector
+Root vector   When an element of the root lattice is represented by its
+   coefficients on the basis consisting of the fundamental roots a1 ,..., as,
+   the result is called a root vector.  So a root vector has as size the
+   semisimple rank of the group, and such a vector v = [v1 ,.., vs] is
+   interpreted as the sum    s = a1*v1+ ... +as*vs.
+@toral element
+Toral element   To describe elements of T we can use the fundamental
+   weights wi. Recall that weights are in fact mappings T->C* , and a
+   weight  can therefore be evaluated at an element t element T, the resulting
+   value be written t^lambda, the set of fundamental weights form a complete
+   set of coordinates in the sense that any element t element T in uniquely
+   determined by the values t^wi for i = 1,...,r.  Although LiE cannot
+   represent arbitrary complex numbers, it can represent torus elements
+   of finite order, i.e., elements for which all t^wi are roots of unity.  To
+   this end, a vector [a1 ,..., ar, n] in LiE may represent the element t 
+   for which t^wi = exp(2*Pi*I/n) = zeta_n^ai where zeta_n = exp(2*Pi*I/n) is a
+   canonical n-th root of unity. See also one parameter subgroup. Since
+   this is not the usual presentation of a toral element in a classical Lie
+   group like GL(n, C) (namely by the diagonal entries occurring when
+   the element is diagonalised), an example is given in Chapter 5 of how
+   to transform from one presentation to another.
+@weight
+Weight   A weight with respect to a torus T is an algebraic group morphism 
+   T->C* ; it describes a 1-dimensional representation of T.
+   These arise in the decomposition of the restriction to T  of repre-
+   sentations of g, in which case they are called the weights of the 
+   g-representation with respect to T. The set Lambda(T) of weights is an
+   Abelian group, where the group operation is pointwise multiplication of 
+   weights as C -valued functions (which corresponds to the tensor product 
+   of 1-dimensional T-representations), this is written additively.  
+   We consequently use the exponential notation t  to indicate application of 
+   a weight  to t element T, so that we have t^(lambda+mu)= t^lambda*t^mu. 
+   The fundamental weights span the weight lattice as a free Z-module;
+   expressing a weight on this basis we obtain a so-called weight vector.
+@weight lattice
+Weight lattice   The set Lambda(T) of all weights of g with respect to T is
+   called the weight lattice. The addition defined for weights turns Lambda(T)
+   into an Abelian group isomorphic to Z^r.
+@weight vector
+Weight vector   When a vector is represented by its coefficients on the
+   basis consisting of the fundamental weights w1 ,.., wr, it is called a
+   weight vector. So a weight vector v = [v1 ,..,vs] is interpreted as the
+   sum s = v1*w1+ ... + vs*ws.
+@bruhat descendent
+Bruhat descendent   For any element w element W the Bruhat descendents
+   are those elements x element W for which x < w in the Bruhat order 
+   and the length l(x) is exactly one less than l(w). Any element y element W 
+   with y <= w can be obtained starting from w by repeatedly moving from
+   an element to one of its Bruhat descendents.
+@bruhat order
+Bruhat order   The Bruhat order is a partial ordering defined on any
+   Coxeter group. It can be determined by the following recursive defini-
+   tion. For the identity element e element W we have x <= e  <-> x = e. For
+   any other element y element W there is some simple reflection ri such that
+   l(yri)<l(y), then for any x element W we have x<= y <->  x0<=yri, where
+   x0 is the element with the smaller length from {x, xri}. This definition
+   is independent of the choice of ri. Incidentally, the definition implies
+   that the condition l(yri)<l(y) used above is equivalent to yri<y.
+   It is tempting to omit the function l from similar conditions (as occur
+   for instance in the description of the Kazhdan-Lusztig polynomials),
+   but we have not done this to avoid the suggestion that the full Bruhat
+   order is involved in cases where a simple length comparison suffices.
+@canonical weyl word
+Canonical Weyl word   When representing Weyl group elements by
+   Weyl words it is sometimes useful (for instance when testing for equal-
+   ity) to select for each w element W a particular expression among the many
+   possibilities, this is then called the canonical Weyl word for W . In LiE
+   we choose for this purpose the lexicographically first reduced expres-
+   sion for w.
+@coxeter group
+Coxeter group   A Coxeter group is a finitely presented group, where
+   the presentation is determined by its Coxeter matrix m = (mi,mj)1<=i,j<=s;
+   the presentation of the Coxeter group is <g1 ,...,gs | (gi*gj)^m[i,j] = 1>.
+   Every Weyl group is a Coxeter group, with Coxeter matrix given by
+   mi,j= order(ri*rj).
+@coxeter matrix
+Coxeter matrix   A Coxeter matrix is a symmetric matrix m = (m[i,j]) 1<=i,j<=s
+   with positive integer entries, such that m[i,j]= 1 if and only if i = j.
+   Such a matrix is used to define a Coxeter group.
+@distinguished coset representative
+Distinguished coset representative   Within the Weyl group W we
+   may consider left-, right-, and double cosets with respect to a sub-
+   group (or in the case of double cosets, two subgroups) generated by
+   fundamental reflections,  in each case the unique element of small-
+   est length in its coset is called the distinguished coset representative.
+   Note that this term refers to a Weyl group element as representative
+   for a coset, not to a Weyl word representing that Weyl group element.
+@dominant weight
+Dominant  weight   A weight whose inner products with all funda-
+   mental roots are non-negative is called dominant. Equivalently, if the
+   weight is written on the basis of the fundamental weights w1 ,..., wr,
+   then the first s coefficients (corresponding to the semisimple part of
+   the weight lattice Lambda(T)) are non-negative.
+@exponents
+Exponents e1 ,..., er   The algebra of polynomial functions invariant under
+   the action of the Weyl group of g in its standard reflection representa-
+   tion is generated by r homogeneous polynomials of respective degrees
+   e1 + 1, e2 + 1 ,..., er + 1.  Usually the exponents of g are given in
+   weakly increasing order.
+@kazhdan-Lusztig polynomial
+Kazhdan-Lusztig polynomial   For any pair x, y of elements of a Cox-
+   eter group W  a polynomial Px,y is defined, called Kazhdan-Lusztig
+   polynomial.  Further information in manual.
+@lenght
+Length   The length of a Weyl group element w is the smallest number
+   l such that w is a product of l fundamental reflections.  Hence, it is
+   the size of a reduced Weyl word representing w.
+@longest element
+Longest element   In every finite Coxeter group W there is a unique
+   element of maximal length.  It is an involution (but in general not a
+   reflection), and is called the longest element of W .
+@orbit
+Orbit   When a group W acts (from the right) on a set X, any x element X
+   has an orbit,which is the set of all distinct values of x.w for w element W.
+@orbit matrix
+Orbit  matrix   When a finite group acts on any lattice by integral
+   matrices, an orbit may be represented by an orbit matrix, each row
+   of which represents one element of the orbit.
+@reduced weyl word
+Reduced Weyl word   If an element w of the Weyl group is expressed
+   as a product ri1    rim  of fundamental reflections, and no product
+   of fewer than m fundamental reflections yields w, then the sequence
+   [i1, : :,:im ] is a reduced Weyl word for w. In general such a reduced
+   Weyl word is not uniquely determined by w, but see canonical Weyl
+   word.
+@reflection
+Reflection   A Weyl group element that acts on the weight lattice, fix-
+   ing a sublattice of rank r  1, is an orthogonal reflection in the hyper-
+   plane perpendicular to some root.  The reflections are precisely the
+   conjugates of the simple reflections, and the latter description makes
+   sense for arbitrary Coxeter groups.
+@r-polynomial
+R-polynomial   For any pair x, y of elements of a Coxeter group W a
+   polynomial R_x_y in one indeterminate is defined, called R-polynomial.
+   These polynomials are related to the Kazhdan-Lusztig polynomials.
+@weyl group
+Weyl group   The Weyl group W is defined as the quotient of the nor-
+   maliser N_g(T) of the maximal torus T in g by the centraliser of T in g
+   (which is T itself). W is a finite group, and has a faithful linear rep-
+   resentation on the weight lattice Lambda(T). The elements of W are often
+   identified with their images in this representation. The fundamental
+   reflections r1 ,..., rs in this representation are canonical generators
+   of W.
+@weyl word
+Weyl word   An element of the Weyl group W may be presented as a
+   product of the fundamental reflections ri (1<=i<=s).  If ri_1,...,ri_l
+   is such a product, the corresponding Weyl group element may be
+   represented by the so-called Weyl word [ri_1 ,..., ri_l].  It is allowed to
+   include entries equal to 0 in a Weyl word, which are ignored by LiE,
+   no function that returns Weyl words will include such zeros in the
+   result, except possibly as a padding at the right end when that Weyl
+   word forms a row in a matrix of Weyl words of different lengths.
+@character polynomial
+Character polynomial (symmetric group). For the symmetric group on n
+   letters, the conjugacy classes are parametrised by partitions of n,
+   where the parts of the partition correspond to the disjoint cycles of the
+   permutation.  Therefore a character X_lambda of the symmetric group may
+   be represented by a character polynomial, which is a polynomial in n
+   indeterminates, in which each exponent represents a partition mu of n
+   (padded with trailing zeros) and its coefficient is the (integral)
+   value X_lambda(mu) of the character X_lambda on the conjugacy class
+   corresponding to mu.
+@partition
+Partition   A partition of a natural number n is a weakly decreasing
+   sequence of numbers whose sum is n; adding or removing trailing zeros
+   does not alter the partition. Any partition of n can be represented as
+   a vector v = [v1 ,..., vn ] of length n.  The LiE function partitions(n)
+   produces a matrix whose rows represent the partitions of n. Partitions
+   of n parametrise the conjugacy classes of the symmetric group on
+   n letters and also their irreducible characters, they also parametrise
+   dominant weights of SL_n or GL_n .
+@partition coordinates
+Partition coordinates   A weight x for a group of type A_(n-1)  can be
+   expressed in partition coordinates by forming a vector of length n
+   whose i-th entry is the sum of the coefficients in x of the j-th fun-
+   damental weights for j >=i (note that the final entry is always 0).
+   Conversely the coefficient of the i-th fundamental weight can be ob-
+   tained as the difference between the i-th and the i + 1-st partition
+   coordinate.  In LiE these conversions can be performed by the func-
+   tions to_part and from_part.  Partition coordinates are used for the
+   function LR_tensor.
+@robinson-schensted correspondence
+Robinson-Schensted correspondence   The Robinson-Schensted cor-
+   respondence is an algorithmically defined bijection between the el-
+   ements of the Symmetric group Sn  and the set of pairs of Young
+   tableaux of equal shape with n entries.
+@shape
+Shape   The shape of a Young tableau is a partition describing the
+   length of the rows of the tableau.
+@symmetric group
+Symmetric group   The set of permutations of {1,...,n} is called the
+   Symmetric group on n letters, often denoted by S_n.  Its conjugacy
+   classes are described by partitions,|as well as its characters.
+@tableau
+Tableau   A (Young) tableau is an arrangement of a set {1,2,...,n}
+   of numbers into rows of weakly decreasing length,such that the num-
+   bers increase along rows and columns.The shape of a tableau is the
+   sequence of its row lengths,which is a partition. A typical example is
+
+                                 1  2  4  6  11
+                                 3  5  8 
+                                 7  10 
+                                 9  12
+
+   which has shape [5, 3, 2, 2].  In LiE, tableaux are represented linearly
+   by vectors of size n.  If t is such a vector, then t[i] indicates the
+   row number of the entry i in the 2-dimensional form.  For instance,
+   the tableau above would be encoded as [1, 1, 2, 1, 2, 1, 3, 2, 4, 3, 1, 4]. A
+   function print_tab is provided to display the 2-dimensional form of a
+   tableau. Young tableaux have many applications in the theory of the
+   symmetric group, for instance the number of tableaux of shape  is
+   equal to the dimension of the irreducible representation of S_n corre-
+   sponding to .
+@adams operator
+Adams' operator   For each n > 1 there is an operator, called the
+   n-th Adams' operator, defined on the set of virtual g-modules, which
+   has the effect on the characters of scaling each occurring weight by a
+   factor n (while retaining its multiplicity). In general the result is a vir-
+   tual module even if the original module was actual. The n-th Adams'
+   operator is the `weight analog' of the operator that, given a character
+   O of a finite group g, computes the decomposition of the class function
+   gamma->X(gamma^n) as an integral linear combination of irreducible charac-
+   ters.  The operator is useful for computing symmetrised tensor powers.
+@adjoint representation
+Adjoint representation   Each Lie group g acts on its Lie algebra by
+   conjugation, which defines a representation of the group, the so-called
+   adjoint representation.  The non-zero weights of this representation
+   (all of which occur with multiplicity 1) are called the roots of g.
+@alternating Weyl sum
+Alternating Weyl sum The Alternating Weyl has the interesting property that 
+   it gives the same result when applied to a decomposition polynomial as 
+   when applied to the corresponding character polynomial.  
+   Note that the expression above suggests an alternative action of W on 
+   polynomials, where the i-th generator
+   of W (as a Coxeter group) does not act on exponents by reflection in
+   the hyperplane perpendicular to ai, but rather in that plane shifted
+   by wi (or equivalently by rho), and meanwhile also changes the sign
+   of the coefficients.  For this action J (p) is just the sum of the W -
+   images of p.  However, since this "shifted alternating action" plays
+   no role except via the operator J , we will not introduce any further
+   terminology or notation relating to it.
+@branching
+Branching   Branching is another word for restricting a g-module M
+   to another reductive group h.  Suppose h is a closed reductive Lie
+   subgroup of g. The branching problem concerns finding the decompo-
+   sition into highest weight modules of M when viewed as an h-module.
+   Since the maximal torus T_g of g is unique up to conjugacy, and sim-
+   ilarly for h, the maximal torus T_h  of h may be chosen within T_g.
+   Consequently, each weight with respect to T_g determines by restric-
+   tion a weight with respect to T_h, which defines a linear transformation
+   Lambda(T_g)->Lambda(T_h). In fact we can define such a restiction transforma-
+   tion in the more general setting of an arbitrary Lie group morphism
+   f: h->g (not just for embeddings), consequently we can consider
+   branching for such situations as well. The matrix m which describes
+   this transformation on the respective bases of fundamental weights, is
+   called the restriction matrix for h in g, and plays a crucial role in the
+   function branch.  The function res_mat helps to find the restriction
+   matrix in cases where h is a fundamental Lie subgroup, LiE has also
+   access to a table of precomputed restriction matrices for cases where
+   h is a maximal subgroup in g but not a fundamental Lie subgroup.
+@character
+Character   For a representation of a group on a finite dimensional vec-
+   tor space we may define a function on the group by assigning to each
+   group element the trace of the corresponding transformation of the
+   vector space.  This function, which is constant on conjugacy classes,
+   is called the character of the representation.  For reductive complex
+   Lie groups the character determines the representation up to isomor-
+   phism, and this is already true for the restriction of the character to
+   the maximal torus T . Now the restriction to T of the representation
+   decomposes into a direct sum of 1-dimensional representations, and
+   the character of such a 1-dimensional representation is just a weight.
+   Hence the restriction to T of the character of the whole representa-
+   tion can be correspondingly written as a formal sum of weights (formal
+   because we don't use the Abelian group structure of Lambda(T) here, but
+   just count the occurring weights with multiplicities, in other words,
+   the sum is taken in the group algebra of Lambda(T) ) and this is called the
+   formal character of the representation. This character can be conve-
+   niently encoded as a character polynomial. 
+@character polynomial
+Character  polynomial   The (formal) character of a representation
+   of g can be expressed as a polynomial, which records each weight w
+   occurring with multiplicity m in the character as a term m*X^w of the
+   polynomial.
+@contragredient representation
+Contragredient representation   For each representation of g on a
+   vector space V there is a corresponding representation, called its con-
+   tragredient representation, on the dual vector space V^*  . Here a group
+   element a acts on an element f: V->C of V^*  by mapping it to
+   f.a: v->f (v.a^(-1)).  As an example where the contragredient occurs,
+   consider the space of homogeneous polynomial functions of degree n
+   on V , this is a finite dimensional space on which g acts (by the same
+   formula as above, but with for a polynomial function replacing f ).
+   This representation of g is isomorphic to the n-th symmetric tensor
+   power of the contragredient representation of the original representa-
+   tion.
+@decomposition  polynomial
+Decomposition  polynomial   The decomposition of a g-module M
+   into irreducible modules may be represented by a decomposition poly-
+   nomial d. Each term m*X^lambda  of d represents a dominant weight such
+   that the highest weight module V  occurs in M with multiplicity m.
+   In certain circumstances we allow m to be negative, in which case
+   there is no module corresponding to d, but we may think of M as a
+   formal sum (with integral scalar coefficients) of irreducible modules.
+   In this case M is called a virtual module, and the polynomial a virtual
+   decomposition polynomial.
+@demazure operator
+Demazure operator   For each simple root ai a linear operator M_ai,
+   called Demazure operator, is defined on the set of polynomials with
+   exponents in Lambda(T).  A discussion of the mathematical
+   significance of this operator is beyond the scope of this manual, as it
+   involves the representation theory of parabolic subgroups, which are
+   not reductive. 
+@dominant character polynomial
+Dominant character polynomial   Since character polynomials are
+   invariant under W , and each W-orbit of weights contains a unique
+   dominant element, the information of a character polynomial can be
+   more compactly represented by omitting all terms whose exponents
+   are not dominant.  The polynomial obtained in this way from the
+   character polynomial of a g-module M is called the dominant charac-
+   ter polynomial of M .  LiE  provides functions filter_dom and W_orbit
+   for going from the character polynomial to the dominant character
+   polynomial and back again.
+@highest weight
+Highest  weight   The maximum of the set of weights of some irre-
+   ducible representation of g with respect to the partial ordering < is
+   called the highest weight, it always exists and is a dominant weight
+   that occurs with multiplicity 1. Conversely, every dominant weight lambda
+   occurs as the highest weight of a unique irreducible representation V_lambda
+   of g.  By definition,  lambda0<lambda  holds if and only if 
+   lambda - lambda0 is a sum of positive roots, in this case  lambda is called 
+   higher than lambda0.
+@highest weight module
+Highest weight module   For a dominant weight  the unique irre-
+   ducible representation of g with lambda as highest weight, is called the
+   highest weight module (or representation) of g for lambda, and is denoted
+   by V_lambda.
+@irreducible representation
+Irreducible representation   A representation of a group g is called
+   irreducible if the representation space has no proper non-zero subspace
+   that is stable under g.  In case g is a reductive group it suffices that
+   the representation space cannot be decomposed as a direct sum of two
+   non-trivial g-stable subspaces.
+@module
+Module   See representation.
+@plethysm
+Plethysm   A representation of a group g on a vector space M corre-
+   sponds to a group morphism g ->GL(M ). As such it can be composed
+   with any representation of the group GL(M ) on a vector space N , giv-
+   ing rise to a representation of g on the space N .  Now if we take for
+   the representation of GL(M ) the irreducible one parametrised by the
+   partition lambda (in partition coordinates), then the resulting representa-
+   tion of g is called the plethysm, or symmetrised tensor power, of M
+   with respect to lambda. 
+@representation
+Representation   An action by linear transformations of a group g on
+   a finite dimensional vector space V  (where the representing matrices
+   depend in a polynomial way on the coordinates of the group element),
+   is called a (rational) representation of the group, the space V  is then
+   called a module for g. This is equivalent to giving a (Lie) group mor-
+   phism g -> GL(V ).  The irreducible representations of finite groups,
+   as well as of reductive Lie groups, are determined (up to equivalence)
+   by their characters.  For reductive Lie groups, the irreducible repre-
+   sentations are parametrised by their highest weights. 
+@restiction matrix
+Restriction matrix   If h is a reductive subgroup of g, and a maximal
+   torus of h is chosen within the maximal torus T of g, then any weight
+   of g with respect to T (which is a function on T ) becomes by restriction
+   to the maximal torus of h a weight of h. Consequently there is a map
+   from the weight lattice of g to that of h, and this map is linear, it
+   can therefore be given by a matrix, called the restriction matrix for
+   the subgroup h.  A similar matrix can be defined for an arbitrary
+   Lie group morphism f : h->g.  Each row of this matrix represents
+   the restriction to the maximal torus of h of a fundamental weight
+   of g, viewed as a weight of h.  The restriction matrix plays a role in
+   branching.
+@virtual module
+virtual  module   A formal sum of irreducible g-modules with inte-
+   ger coefficients corresponds to an actual g-module only if all the co-
+   efficients are non-negative (the module can then be constructed by
+@finish

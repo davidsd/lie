@@ -1,0 +1,3 @@
+#!/bin/sh
+sed -e "s!LD=.*!LD=`/bin/pwd`!"  <lie_script >lie
+chmod a+x lie

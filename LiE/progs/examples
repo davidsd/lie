@@ -1,0 +1,314 @@
+off gc
+maxobjects 9999
+
+union (mat a,b)=unique(a^b)
+intersection(mat a,b)= support(X unique(a)+X unique(b)-X union(a,b))
+
+sum(vec v)=v*all_one(size(v))
+prod(vec v)= loc p=1; for i in v do p=p*i od; p
+
+fac(int n)=class_ord([n+1])
+
+eval_pol(pol p; vec pt) = loc s=0;
+  for i=1 to length(p)
+  do loc m=1; for j=1 to size(pt) do m=m*pt[j]^expon(p,i)[j] od;
+    s+=coef(p,i)*m
+  od; s
+eval_pol(pol p; int n)=eval_pol(p,[n])
+
+default(grp g)=g
+
+div(int a,b)=a*inv(b)%p
+inv(int x)=
+{ loc m=[[x%p,1,0],[p,0,1]];
+  while m[1,1] # stop when smaller number becomes 0 #
+  do loc q=m[2,1]/m[1,1]; m=[m[2]-q*m[1],m[1]] od;
+  if m[2,1]!=1 then error("division by 0") fi; m[2,2]
+}
+
+Gauss(mat m) =
+{ m=m%p; loc i=1;
+  while i<=n_rows(m)
+  do if wipe(i) # true unless m[i] was null # then i+=1
+     else m=m-i # cast away null row #
+     fi
+  od;
+  savestate; on - lex; sort(m); restorestate; m
+}
+wipe(int row_nr) =
+{ loc v=m[row_nr]; # the row to wipe with #
+  loc j=1; while j<=size(v) && !v[j] do j+=1 od;
+  if j>size(v) then return 0 # failure # fi;
+  v=inv(v[j])*v%p; # normalise, making leading coefficient 1 #
+  for i=1 to n_rows(m) do if i!=row_nr then m[i]=m[i]-m[i,j]*v fi od;
+  m[row_nr]=v; 1 # success #
+}
+
+roots() = loc m=pos_roots; m^-m
+
+toral_dim(grp g)=Lie_rank(g[0])
+ss_rank(grp g)=Lie_rank(g)-toral_dim(g)
+rho(grp g)=all_one(ss_rank(g))^null(toral_dim(g))
+
+inverse(vec w)= loc l=size(w); loc wi=w;
+  for i=1 to l do wi[i]=w[l+1-i] od; wi
+pos_neg(vec w)=intersection(pos_roots,W_rt_action(-pos_roots,inverse(w)))
+
+cox_mat1() = loc m=id(ss_rank);
+  for i=1 to n_rows(m)-1 do for j=i+1 to n_rows(m)
+  do m[i,j] = ord(W_action([i,j])); m[j,i]=m[i,j] od od;  m
+
+ord(mat m) = loc p=m; loc i=1; loc idmat=id(n_rows(m));
+  while p!=idmat do p=p*m; i+=1 od; i
+
+cox_mat()= loc m=id(ss_rank); loc c=Cartan;
+  for i=1 to n_rows(m)-1 do for j=i+1 to n_rows(m)
+  do m[i,j] = 2+c[i,j]*c[j,i]; if m[i,j]==5 then m[i,j]=6 fi;
+    m[j,i]=m[i,j]
+  od od; m
+
+next_rewrite(vec w; int k)=
+{ w=reduce(w); if k+1>size(w) then return w fi;
+  loc m= cox_mat[w[k],w[k+1]]; if k+m-1>size(w) then return w fi;
+  for i=k+2 to k+m-1 do if w[i] != w[i-2] then return w fi od;
+  loc t=w[k+m-2]; for i=k to k+m-2 do w[i]=w[i+1] od;
+  w[k+m-1]=t; w
+}
+
+all_rewrites(vec w)=
+{ w=reduce(w); loc l=size(w); loc m=[w]; loc i=0;
+  while i<n_rows(m)
+  do i+=1;
+    for j=1 to l-1
+    do loc next=next_rewrite(m[i],j); loc found=0;
+      for k=1 to n_rows(m)
+      do if m[k]==next then found=1; break fi od;
+      if !found then m=m+next fi
+    od
+  od; m
+}
+
+all_W_words(vec prefix,x)=
+{ loc m=null(0,l);
+  for i=1 to ss_rank
+  do if x[i]<0 then m=m^all_W_words(prefix+i,W_action(x,[i])) fi od;
+  if n_rows(m) then m else # x is dominant # [prefix] fi
+}
+
+alt_rewrites(vec w)= loc l=length(w); all_W_words([],W_action(rho,inverse(w)))
+
+bruhat(vec w) =
+{ loc w=reduce(w); loc m=null(0,size(w)-1);
+  for i=1 to size(w)
+  do loc v=w-i; if length(v)==size(w)-1 then m=m+v fi od;
+  # it  remains to check whether two rows represent words #
+  # corresponding to the same Weyl group element #
+  m=unique(m); loc rho=all_one(Lie_rank);
+  for i=1 to n_rows(m)-1 do for j=i+1 to n_rows(m) do
+  if W_action(rho,m[i]) == W_action(rho,m[j]) then m[j]=m[i] fi
+  od od ;
+  unique(m)
+}
+
+inter_pol(vec x,y) =
+{ loc result=poly_null(1); if !Bruhat_leq(x,y) then return result fi;
+  loc l=length(y); loc lx=length(x); loc level=[y];
+  while l>=lx
+  do result += n_rows(level) X l;
+     loc nl=canonical(Bruhat_desc(x,level[1]));
+     for i=2 to n_rows(level)
+     do nl=unique(nl^canonical(Bruhat_desc(x,level[i]))) od;
+     level=nl; l=l-1
+  od; result
+}
+
+char_v(vec s)= loc y=rho; for i=1 to size(s) do y[s[i]]=0 od; y
+
+r_cosets(vec s)=for wt row W_orbit(char_v(s)) do print(W_word(wt)) od
+
+l_cosets(vec s)=for wt row W_orbit(char_v(s)) do print(inverse(W_word(wt))) od
+
+double_cosets(vec l,r)=
+  for x row W_orbit(char_v(r)) do loc w=W_word(x);
+    if w==l_reduce(l,w) then print(w) fi
+  od
+
+inspect(grp g)= for r row id(Lie_rank(g)) do print(W_orbit_size(r,g)) od
+choose(grp g)= if Lie_code(g)[1]==5 then Lie_rank(g) else 1 fi
+semisimple(grp g)=g*Lie_group(0,-toral_dim(g)) # kill the central torus #
+
+translate(int i)=trans[i]
+
+trav(grp g; vec prefix,trans) =
+{ loc s=ss_rank(g);
+  if s<=3 then
+    for r row W_orbit(rho(g),g)
+    do action(prefix^make(translate,W_word(r,g))) od
+  else loc c=choose(g); loc roots=id(s); loc sub_roots=roots-c;
+    loc h=semisimple(Cartan_type(sub_roots,g));
+    loc new_trans=fundam(sub_roots,g)*trans; # cumul. translation #
+    for r row W_orbit(roots[c],g) # orbit of vector with stabiliser h #
+    do loc w=W_word(r,g); trav(h,prefix^make(translate,w),new_trans) od
+  fi
+}
+
+ii(int n)=n
+traverse(grp g)= g=semisimple(g); trav(g,[],make(ii,ss_rank(g)))
+
+action(vec w)= print(w) # a useful initial setting #
+
+# table of Kazhdan-Lustig polynomials, most suited for B3 #
+str(vec w) =
+  if w==[] then "e"
+  else loc s=""; for i=1 to size(w) do s=s+w[i] od; s
+  fi
+
+buf=""; first=1
+output(tex t)= if length(buf+t)>70 then print(buf+","); buf="  " fi;
+  buf = buf+ if first || buf=="  " then t else ", "+t fi; first=0
+flush()=if !first then print(buf+"."); first=1 fi
+
+list_KL(vec x) =
+{ loc level=[reduce(x^long_word)]; loc l=length(level[1]);
+  buf=str(x)+": ";
+  while l>0 # case l=0 would not produce any output #
+  do loc nl=null(0,l-1);
+    for r row level
+    do nl=unique(nl^canonical(Bruhat_desc([],r)));
+      loc y=reduce(r^long_word); loc p=KL_poly(x,y);
+      if p != X0 then output
+      ( if p==X1+X0 then str(y) else
+	if p==X2+X0 then "("+str(y)+")" else
+        if p==X2+X1+X0 then "["+str(y)+"]" else
+          ">"+str(y)+"<" fi fi fi
+      ) fi
+    od; level=nl; l+=-1
+  od; flush
+}
+
+table_KL()=
+{ loc level=[[]]; loc l=0;
+  while n_rows(level)
+  do l+=1; loc nl=null(0,l);
+    for w row level
+    do list_KL(w);
+      for i=1 to ss_rank do if w+i==canonical(w+i) then nl+= w+i
+      fi od
+    od ; level=nl
+  od
+}
+
+toral(vec v) = v=v/gcd(v); loc s=size(v); (v-s)%v[s]+v[s]
+mk_toral(vec b; int d)= loc n=size(b);
+  for i=2 to n-1 do b[i]=(b[i-1]+b[i])%d od; b[n]=d; b
+
+mk_toral(vec b; int d)= loc n=size(b);
+  for i=2 to n-1 do b[i]=(b[i-1]+b[i])%d od; b[n]=d; b
+
+m=[[2,2,2,2,1,1],[0,2,2,2,1,1],[0,0,2,2,1,1],
+   [0,0,0,2,1,1],[0,0,0,0,1,1],[0,0,0,0,-1,1]]
+mk_tor_d6(vec a; int d)= toral((a*m)%(2*d)+2*d)
+
+spec(pol p; vec t)= loc r=size(t); branch(p,T1,*[t-r])%[t[r]]
+
+char0(vec lambda)=Demazure(lambda)
+
+from_eps(vec lambda)=from_part(lambda)+sum(lambda)
+from_eps(pol p)=loc s=poly_null(n_vars(p));
+  for i=1 to length(p) do s+=coef(p,i) X from_eps(expon(p,i)) od; s
+to_eps(vec wt)= loc n=size(wt); loc v=to_part(wt-n);
+  v+ (wt[n]-sum(v))/n * all_one(n)
+to_eps(pol p)=loc s=poly_null(n_vars(p));
+  for i=1 to length(p) do s+=coef(p,i) X to_eps(expon(p,i)) od; s
+
+char(vec lambda)=W_orbit(dom_char(lambda))
+
+test_KL(vec x,w)=
+{ loc result=poly_null(1);
+  loc l=length(w); loc lx=length(x); loc dl=l-lx; loc level=[w];
+  while l>lx
+  do l+=-1; loc nl=null(0,l);
+    for y row level
+    do result+=R_poly(x,y)*KL_poly(y,w);
+      nl=unique(nl^canonical(Bruhat_desc(x,y)))
+    od; level=nl
+  od; result=={ loc pxw=KL_poly(x,w); X dl*(pxw*[[-1]])-pxw }
+}
+
+check_dim(vec lambda)= loc p=dom_char(Lambda); loc d=0;
+  for i=1 to length(p) do d+=coef(p,i)*W_orbit_size(expon(p,i)) od;
+  d==dim(lambda)
+
+chk_branch(vec wt; grp h; mat m)= dim(branch(wt,h,m),h)==dim(wt)
+
+l(vec mu)= #number of non-zero parts # loc n=size(mu);
+  for i=1 to n do if !mu[i] then return i-1 fi od; n
+pleth_pol(vec lambda)=
+{ loc p=0X0;
+  for mu row partitions(sum(lambda))
+  do p+=sym_char(lambda,mu)*class_ord(mu) X l(mu) od;
+  p
+}
+pleth_dim(vec lambda; int orig_dim)=
+  eval_pol(pleth_pol(lambda),orig_dim)/fac(sum(lambda))
+
+char(pol p; grp g)=W_orbit(dom_char(p,g),g)
+check_tensor(vec x,y)= char(tensor(x,y))==char(x)*char(y)
+check_branch(vec x; grp h; mat m)=
+  char(branch(x,h,m),h)==char(x)*m
+
+check_sq(vec wt)=alt_tensor(2,wt)+sym_tensor(2,wt)==p_tensor(2,wt)
+
+chk_p_tensor(int n; vec wt)= loc d=poly_null(size(wt));
+  for lambda row partitions(n)
+  do d+=n_tabl(lambda)*plethysm(lambda,wt) od;
+  d==p_tensor(n,wt)
+
+branch_comp(vec wt; grp h; mat m; grp g)=
+{ loc c=n_cols(m);
+  if Lie_rank(h)!=c || Lie_rank(g)!=n_rows(m)
+    then error("wrong size restriction matrix") fi;
+  loc r=toral_dim(g); loc wk=null(r); loc mk=null(r,c);
+  loc i=ss_rank(g);
+  for j=1 to r do mk[j]=m[i+j]; wk[j]=wt[i+j] od;
+  loc res=alt_dom(wk*mk,h); # central torus part, ensure dominant #
+  i=0;
+  for k=1 to comp_size(g)
+  do r=Lie_rank(g[k]); wk=null(r); mk=null(r,c);
+    for j=1 to r do mk[j]=m[i+j]; wk[j]=wt[i+j] od;
+    res=tensor(res,branch(wk,h,mk,g[k]),h); i+=r
+  od;
+  res
+}
+branch_comp(pol p; grp h; mat m; grp g)=
+{ loc s=coef(p,1)*branch_comp(expon(p,1),h,m,g);
+  for i=2 to length(p)
+  do s+=coef(p,i)*branch_comp(expon(p,i),h,m,g); od;
+  s
+}
+
+shave(int i;pol p)=loc v=id(n_vars(p))[i]; filter_dom(X(-v)*p)*X v
+spread(pol p)=p+W_action(shave(4,p),[4])+W_action(shave(3,p),[3,4])
+branch_f4_b4(pol p)=decomp(spread(dom_char(p))*m,B4)
+
+r(int a)= loc p=X[0,0]; loc sum=p;
+  for i=1 to a do p=X[1,0]*p+X[0,i]; sum+=p od; sum
+
+s(int b)= loc p=X[b,b]; loc sum=p;
+  for i=b-1 downto 0 do p=X[-1,0]*p+X[b,i]; sum+=p od; sum
+
+q(vec lambda)=r(lambda[1])*s(lambda[2])
+
+p(vec lambda)=
+  if lambda[1]>0 && lambda[2]>0
+  then q(lambda)-X[1,1]*q(lambda-[1,1]) else q(lambda)
+  fi
+
+Levi_mat(int i)=fundam(id(Lie_rank)-i) # remove i-th row and renumber #
+Levi_type(int i)=Cartan_type(Levi_mat(i))
+Levi_diagram(int i)=diagram(Levi_type(i))
+Levi_res_mat(int i)= res_mat(Levi_mat(i))
+Levi_branch(vec v; int i) =
+  loc m=Levi_mat(i); branch(v,Cartan_type(m),res_mat(m))
+
+on gc

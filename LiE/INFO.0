@@ -1,0 +1,366 @@
+@history()
+The development of LiE was initiated in Jan 1988 by the computer algebra
+group at CWI, Amsterdam. Members of this group, and their contributions,
+have been the following: Arjeh M. COHEN (the idea, many mathematical
+functions, the first manual, project leader), Ron SOMMELING (first version,
+mathematical programs, trouble shooting), Bert LISSER (the kernel and the
+interpreter), Bart de SMIT (mathematical programs), Bert RUITENBURG (tests,
+texts, examples), Marc van LEEUWEN (math programs, rewriting and new
+functions for version 2.0, manual for version 2.0, adaptation and source
+documentation for version 2.1).
+@version()
+Version 2.1
+Available publicly from URL http://www.cwi.nl/~maavl/LiE
+Runs on UNIX platforms and with some limitations on all ANSI C platforms.
+Tested ports exist to SGI, SUN and Atari ST
+@size(vec)array
+size(v).   Returns the size of a vector.
+@degree(pol)polynomials
+degree(p).   Returns the degree of a polynomial.
+degree(p) = max { degree(p[i]) | 1 <= i <= length(p) }
+degree(p[i]) = sum (j=1..n_vars(p)) expon(p,i)[j]
+Example		degree(X[1,2]+3X[3,4]) = 7
+@expon(pol,int)polynomials
+expon(p,i).   Returns the exponent vector of the i-th term of p.
+The terms are sorted first (sorting criterion can be set by `on ...').
+Example		expon(X[1,2]+3X[3,4],2) = [3,4]
+@coef(pol,int)polynomials
+coef(p,i).   Returns the coefficient of the i-th term of p.
+The terms are sorted first (sorting criterion can be set by `on ...').
+Example		coef(X[1,2]+3X(3,4),2) = 3.
+@n_rows(mat)array
+n_rows(m).   Returns the number of rows of m.
+@n_cols(mat)array
+n_cols(m).   Returns the number of columns of m.
+@n_vars(pol)polynomials
+n_vars(p).   Returns the number of indeterminates of p.
+@length(pol)polynomials
+length(p).   Returns the number of non-zero terms of p.
+@*(vec,vec)
+v*w   Returns standard inner product `sum (i=1..size(v)) v[i]*w[i]'.
+@*(mat,mat)
+Matrix multiplication.
+@*(int,pol)
+n*p   Multiplies each term of p by n.
+@*(grp,grp)
+Direct product of groups.
+@*(mat,vec)
+Applies the matrix from the left to the (transposed) vector.
+@*(mat)
+Transposes the matrix.
+@.make(int,int)
+make(f,size) with f:int->int.   Makes the vector [f(1),f(2),..,f(size)].
+@.make(int,int,int)
+make(f,r,c) with f:int,int->int.   Makes a r*c-matrix with i,j-entry f(i,j).
+@.make(int,vec)
+make(f,v) with f:int->int.   Makes the vector [f(v[1]),f(v[2]),..,f(v[n])]
+   where n=size(v).
+@.make(int,vec,vec)
+make(f,v,w) with f:int,int->int and vectors v,w. Makes the vector
+   [f(v[1],w[1]),f(v[2],w[2]),..,f(v[n],w[n])] where n=size(v)=size(w).
+@.make(int,mat)
+make(f,m) with f:int->int and matrix m.   Makes a r*c-matrix with
+   i,j-entry f(m[i,j]), where r=n_rows(m), c=n_cols(m).
+@.make(int,mat,mat)
+make(f,m,n) with f:int,int->int and matrix m,n.   Makes a r*c-matrix
+   with i,j-entry f(m[i,j],n[i,j]), where r=n_rows(m), c=n_cols(m).
+@operators()lieshell
+arithmetic: + - * / %
+logical: && || 
+comparison: == != <= >= < >
+@function()lieshell
+
+<function definition)::=
+   <identifier> ( <type> <var> , <var> , ... ; <type> ... ) = <series>
+|  <identifier> ( <type> <var> , <var> , ... ; <type> ... ) { <series> }
+
+Examples	f(int x,y;vec v)=x*v+y
+		inc(int n) { print(n); n+1 }
+@type()lieshell
+'int'= integer,'bin'=big integer, 'vec'= vector, 'mat'= matrix,
+'grp' = group, 'tex'=text, 'vid'=void and 'pol' = polynomial.
+@integer()lieshell
+Entries of vectors, matrices and polynomial exponents are limited in
+magnitude to 2^31-1=2147483647. Other intgers are of unlimited magnitude.
+@vector()array
+
+<vector expression>::= [ <integer expression> , ..., <integer expression> ]
+
+Example		[1,-2,3,5] 
+@matrix()array
+
+<matrix expression>::= [ <vector expression> , ..., <vector expression> ]
+
+Example		[[1,2],[-3,5],[2,2345]] 
+@group()group
+Simple Lie groups: A1, A2 ..., B2, B3, ..., C2, C3, C4, D3, D4, ...,
+                   E6, E7, E8, F4, G2.
+Semisimple groups: Concatenation of simple liegroups.
+Reductive groups:  Semisiple group possily followed by central torus `Tn'.
+
+Example		A3B6G2T5
+@text()lieshell
+<text>::= "Any string, without carriage returns, enclosed in double quotes"
+"This is an example."
+@polynomial()polynomials
+An object of type `pol' is a polynomial. It is a sum of terms of the form
+`n X v', where n is an integer `coefficient' and v a vector `exponent'.
+Each term of the polynomial a vector of the same length as exponent, which
+length is called the number `n_vars' of indeterminates of the polynomial.
+A polynomial can be interpreted by choosing that many indeterminates, and using
+the first entry of each exponent as the power of the first indeterminate, etc. 
+For example, the polynomial  `X[2,0,7]+3X[0,2,0]' can be interpeted as
+
+			 2  0  7        0  2  0 	 2  7	 2
+			x  y  z  + 3 * x  y  z      ( = x  z  + 3 y) .
+@special()lieshell
+$ = last printed value ,
+\ = command will be continued at next line ,
+# = the characters typed in until the next '#' will be considered 
+    as comment.
+? = request for information about the string typed after '?'.
+: = the string typed after ':' is command to the shell.
+'?' and ':' have to be the first characters of the command.
+@help()
+LiE has some features of a pocket calculator, but all numbers are integers.
+Formulas can be entered in the usual way like `(((2+3)*2-1)*2^(2-1)-2/3)'.
+Moreover, you can assign values to variables (a=2) and define functions
+(square(int i)=i*i). There exist objects of type integer, vector, matrix and
+group. The if-then-else-fi, while-do-od and for-do-od control structures are
+also available. Information about functions, variables and what more appears
+on the screen upon entering a question mark followed by the name of a query.
+Commands (like this ?feature) are executed when a <Return> is entered,
+unless LiE finds that you have an incomplete expression (e.g., an unclosed
+parenthesis), which can be forced by typing '\' as last character.
+
+Other useful help available: ?index, ?functions, learn index.
+@assignment()lieshell
+
+<assignment>::= <identifier> = <expression>
+	      | loc <identifier> = <expression>
+	      | <identifier> += <expression>
+	      | <selection> = <expression>
+	      | <selection> += <expression>
+
+Examples	my_var=4711,	v=[2,4]
+		loc count=0
+		count += 1
+		v[5]=3,		m[3,-4]= 3*count
+		m[3,4]+=7
+@+(tex,tex)
+String concatenation
+@+(tex,bin)
+a+b   appends to textual representation of b to string a
+@*(tex,int)
+a*b   repeats string a b times. 
+@if()lieshell
+
+<conditional clause>::= if <expression> then <series> else <series> fi
+		      | if <expression> then <series> fi
+
+@for()lieshell
+
+<loop clause>::= for <ident>=<expression> to <expression> do <series> od
+	       | for <ident>=<expression> downto <expression> do <series> od
+	       | for <ident> in <expression> do <series> od
+	       | for <ident> row <expression> do <series> od
+
+Examples	for i=19 to 68 do print(i^3) od
+		for j=47 downto 11 do print(j); f(j) od
+		sum=0; v=[3,3,2,8]; for x in v do sum+=x od; sum
+		for v row id(4) do print(v) od
+@commands()lieshell
+Special commands: quit, edit, read, write, monfil, on, off, maxobjects,
+   maxnodes, listvars, listfuns, listops, help, ?, learn
+Type ? followed by command keyword for more information. 
+@on()lieshell
+on		shows parameter settings
+on runtime	shows runtime after each executed command.
+on gc		puts garbage collector on.
+on monitor	maintains logfile.
+on prompt	shows prompt.
+on bigints      computation with integers of unlimited size.(default)
+
+on lprint	lineair print.
+on + lex	increasing lexicographic ordening (polynomials)
+on - lex	decreasing lexicographic ordening
+on + degree	increasing degree ordening
+on - degree	decreasing degree ordening
+on + height	increasing height ordening 
+on - height	decreasing height ordening
+
+These last 2 ordenings are connected to the default group (see setdefault).
+@off()lieshell
+clears the modes set by 'on'; see there for more details.
+@quit()lieshell
+exit
+@edit()lieshell
+'edit' edits the most recently read or edited file (default: initfile), and
+executes the commands in that file after leaving the editor.
+
+'edit "filename"'   edits the file "filename". 
+@null(int,int)array
+null(n,m)   A zero matrix of n rows and m columns.
+@null(int)array
+null(n)   A zero vector of size n.
+@all_one(int,int)array
+all_one(n,m)   A matrix of n rows and m columns, with all entries 1.
+@all_one(int)array
+all_one(n)    A vector of size n, with all entries.
+@poly_null(int,int)polynomials
+poly_null(n)   A zero polynomial with n indeterminates.
+@poly_one(int,int)polynomials
+poly_one(n)   A unit polynomial with n indeterminates.
+@id(int)array
+id(n)   The n by n identity matrix
+@break()lieshell
+
+<statement>::= break
+	     | break <expression>
+
+Exits the inner most do- or while-loop, returning the expression if present.
+@matvec(vec,int)array
+matvec(v,n)   Returns a matrix with n rows and size(v)/n columns. The
+   vector v is split into subvectors, which form the successive rows of m.
+@vecmat(mat)array
+vecmat(m)   Returns a vector, which is the concatenation of the rows of m.
+@error()lieshell
+error(text) prints text and terminates the command being executed.
+@print()lieshell
+print(a)   (any type a) prints a.
+@void()lieshell 
+void(a) (any type a)   Returns void (useful to match type of other expr.)
+@n_comp(grp)group
+n_comp(g)   The number of simple components of g.
+@+(vec,int)
+v+n   Extens v by the entry n.
+Example		[1,2]+3=[1,2,3] 
+@+(int,vec)
+n+v   Prefix v by the entry n.
+Example: 1+[2,3]=[1,2,3] 
+@+(mat,vec)
+m+v   The matrix m with additional row v at the end.
+Example: [[1,2],[3,4]]+[5,6]=[[1,2],[3,4],[5,6]] 
+@-(vec,int)
+v-i   Remove the i-th entry v[i] from v.
+Example: [1,2,3]-2 = [1,3]
+@files()lieshell
+1 In the Lie shell it is possible to execute an external text file
+  with Lie shell commands. In order to execute the file `prog'
+  one has to issue:
+	read prog
+2 It is possible to edit an external file in the Lie shell by entering
+  the command
+	edit prog
+  The Lie shell chooses the editor defined in shell variable $EDITOR
+  (only of UNIX). This variable has to be defined and exported by the
+  shell from which Lie was invoked.
+  After the editing the updated file `prog' will be executed. 
+  When a filename is omitted after the edit command, the most recently
+  read or edited file will be taken.
+3 It is possible to write the user defined functions on an external
+  file `dest' by entering the command:
+	write dest
+4 If there is a file named `initfile' in the same directory as Lie,
+  this file will first be read by entering Lie. The initfile must
+  be a text file containing Lie shell commands. It is intended to
+  contain your own data and functions.
+5 It is possible to monitor a session. This will happen after issuing
+  the command
+	on monitor .
+  All The Lie shell commands and their results will be written in the file
+  named 'monfil'. It can be turned off by entering
+        off monitor
+  It is possible to specify an other file for monitor output by entering 
+	monfil otherfile.
+@write()lieshell
+It is possible to write the user defined functions on an external
+file `dest' by entering the command:
+        write dest
+It is possible to write/append a value of a single variable 
+or a definition of a single function on a file by 
+entering 
+	?name>dest		(write)
+or
+	?name>>dest		(append)
+@read()lieshell
+In the Lie shell it is possible to execute an external text file with Lie
+shell commands. In order to execute the file `prog' one has to issue:
+        read prog
+@monitor()lieshell
+All commands and results, as they appear on your screen, will be stored
+in the file 'monfil' after the command:
+        on monitor
+It can be turned off with 'off monitor'. The file name used can be altered by
+setting 
+	monfil filename
+This can be used to prevent overwriting the previous monitor file.
+@save()lieshell
+See write or files.
+@save_mat(mat,tex)lieshell
+save_mat(m,f) Saves matrix m in file f in Lie intern format.
+@get_mat(tex)lieshell
+get_mat(f) Returns a matrix which is stored in file f in Lie intern format.
+@save_string(tex,tex)lieshell
+save_string(s,f) Saves string s in file f in Lie intern format.
+@get_string(tex)lieshell
+get_string(f) Returns a string which is stored in file f in Lie intern format.
+@^(vec,vec)
+v^w   Concatenates v and w
+@^(pol,pol)
+p^q   extends all exponents of p with n_vars(q) zeros,
+      prefixes all exponents of q with n_vars(p) zeros; returns their product
+@%(int,int)
+n%m = n modulo m
+@%(vec,int)
+v%n =v modulo n entry-wise
+@%(mat,int)=
+m%n =m modulo n entry-wise
+@/(int,int)
+n/m = the division of n by m (and rounded off towards 0 to an integer).
+@/(vec,int)
+v/n = v/n entry-wise
+@/(mat,int)
+m/n = m/n entry-wise
+@^(mat,mat)
+a^b   vertical concatenation of a and b
+@^(int,int)
+a^n   a to the n-th power
+@^(mat,int)
+a^n   a to the n-th power
+@!(int)
+!b   Boolean negation: if b==0 then 1 else 0 fi
+@int()silence
+Type indication for integer
+@bin()silence
+Type indication for big integer
+@vec()silence
+Type indication for vector
+@mat()silence
+Type indication for matrix
+@grp()silence
+Type indication for group
+@tex()silence
+Type indication for text
+@vid()silence
+Type indication for void
+@factor(int)int
+factor(n).   Prints a tentative factorization of n into prime factors.
+   (Returns void, i.e., nothing.) Only prime factors smaller than 2^15 are
+   found.
+@unique(mat)array
+unique(m). Returns a canonical form for a matrix representing a set of
+   vectors: it sorts the matrix and removes any multiple rows.
+   Algorithm: heap sort.
+@setdefault()group
+setdefault g.   Set default Lie group equal to g.  This Lie group is used in
+other functions if the optional argument g is omitted.  Without an argument
+the command setdefault prints the default group.
+@sort(mat)array
+sort(m).  Returns the matrix obtained from `m' by sorting its rows into the
+   order selected by the user (defualt is lexicographically decreasing).
+   Algorithm: quicksort.
+@sort(vec)array
+sort(v) Returns the vector obtained from `v' by sorting its entries into
+   decreasing order. Algorithm: quicksort.
+@finish()

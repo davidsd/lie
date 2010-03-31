@@ -1,0 +1,51 @@
+# encode simple group by unique positive number (0<Lie_code(g[i])[1]<=7)
+# and composite group by vector of encoded numbers
+
+encode(grp g)=
+{ loc result =null(max_factor)
+; for i=1 to n_comp(g)
+  do result[i] = Lie_code(g[i])[1]-1 + 7*Lie_code(g[i])[2] od
+; result
+}
+
+decode(vec v)=
+{ loc g = T0
+; for i=1 to size(v)
+  do if v[i]==0 then break fi
+  ; g = g * Lie_group(v[i]%7+1,v[i]/7)
+  od
+; g
+}
+
+# find all maximal subgroups of equal rank of simple group g
+
+eqrank(grp g)=
+{ loc r=Lie_rank(g); loc hr=high_root(g)
+; loc m= id(r) + -hr # extended root system
+; loc s=""
+; loc max_factor=r   # bound for number of factors, semilocal (encode)
+; loc groups_seen= 1X encode(g) # semilocal (unique)
+; for i=1 to r
+  do # hr[i] must be prime, so that subsystem spans maximal sublattice
+    if (X[2]+X[3]+X[5]) | [hr[i]]
+    then loc z=m-i      # subsytem of extended root system
+    ; loc f=fundam(z,g) # its basis of positive roots
+    ; loc h=Cartan_type(f,g)  # ; print("h="+h)
+    ; if unique(h)      # skip this group if it is seen before
+      then s += "," + h
+      ; write_mat(res_mat(f,g),g,h+".1")
+      fi
+      #; print(res_mat(fundam(z,g),g))
+    fi
+  od
+; s
+}
+
+# if h not in groups_seen, add it and return 1, else return 0
+
+unique(grp h)=
+{ loc c = encode(h)
+; if groups_seen | c then 0
+  else groups_seen += 1X c; 1
+  fi
+}

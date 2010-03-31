@@ -1,0 +1,406 @@
+# This file contains the functions |maxsub| and |resmat| defined for simple
+# groups of rank 2,3,..,8.
+
+# |Maxsub(g)| returns the maximal subgroups of |g|. |Resmat(g,h)| returns the
+# restriction matrix of |g| to the maximal subgroup |h|. If a subgroup appears
+# more then once, then |Resmat(g,h,i)| can be used, where |i| indicates the
+# |i|-th occurence of |h| as subgroup of |g|,
+
+# The following global variables are used
+
+# gp0, gp1, gp2, gp3, gp4, gp5, gp6
+# rm0, rm1, rm2, rm3, rm4, rm5, rm6
+# cur_group, cur_r_grp, nsubgr
+
+# The following functions are defined
+# e1, e2, e3, e4, e5, e6, e7, e8, e, l, issimple,
+# subg, show_subgroups, get_index, store_subgroups,
+# resm, store_restr_matrices, resmata, resmatb, resmatc, resmatd, resmatexc,
+# Maxsub, Resmat.
+
+off gc # this speeds up things
+
+issimple(grp g) = Lie_rank(g[0])==0 && n_comp(g)==1
+
+# initialisation
+
+cur_group=T0
+cur_r_grp=T0
+nsubgr=0
+gp0=T0; gp1=T0; gp2=T0; gp3=T0; gp4=T0; gp5=T0; gp6=T0
+rm0=[[]]; rm1=[[]]; rm2=[[]]; rm3=[[]]; rm4=[[]]; rm5=[[]]; rm6=[[]]
+
+# storage of subgroups
+
+subg(grp g0)=
+{ nsubgr=1; gp0=g0 }
+subg(grp g0,g1)=
+{ nsubgr=2; gp0=g0; gp1=g1 }
+subg(grp g0,g1,g2)=
+{ nsubgr=3; gp0=g0; gp1=g1; gp2=g2 }
+subg(grp g0,g1,g2,g3)=
+{ nsubgr=4; gp0=g0; gp1=g1; gp2=g2; gp3=g3 }
+subg(grp g0,g1,g2,g3,g4)=
+{ nsubgr=5; gp0=g0; gp1=g1; gp2=g2; gp3=g3; gp4=g4 }
+subg(grp g0,g1,g2,g3,g4,g5)=
+{ nsubgr=6; gp0=g0; gp1=g1; gp2=g2; gp3=g3; gp4=g4; gp5=g5 }
+subg(grp g0,g1,g2,g3,g4,g5,g6)=
+{ nsubgr=7; gp0=g0; gp1=g1; gp2=g2; gp3=g3; gp4=g4; gp5=g5; gp6=g6 }
+
+# retrieval of subgroups
+
+show_subgroups()=
+{ if nsubgr>0 then print(gp0)
+; if nsubgr>1 then print(gp1)
+; if nsubgr>2 then print(gp2)
+; if nsubgr>3 then print(gp3)
+; if nsubgr>4 then print(gp4)
+; if nsubgr>5 then print(gp5)
+; if nsubgr>6 then print(gp6)
+fi fi fi fi fi fi fi
+}
+
+Maxsub(grp g)=
+{ if !issimple(g) then error("Maxsub only available for simple groups") fi
+; if Lie_rank(g)<2 || Lie_rank(g)>8
+  then error("Maximal subgroups available only for rank=2,3,..,8.")
+  fi
+; if !g==cur_group then store_subgroups(g) fi
+; show_subgroups
+}
+
+# get group at index i
+Maxsub(int i)=
+{ if i==1 then return gp0 fi
+; if i==2 then return gp1 fi
+; if i==3 then return gp2 fi
+; if i==4 then return gp3 fi
+; if i==5 then return gp4 fi
+; if i==6 then return gp5 fi
+; if i==7 then return gp6 fi
+; T0
+}
+
+# storage of restriction matrices
+
+resm(mat m0)=
+{ rm0=*m0 }
+resm(mat m0,m1)=
+{ rm0=*m0; rm1=*m1 }
+resm(mat m0,m1,m2)=
+{ rm0=*m0; rm1=*m1; rm2=*m2 }
+resm(mat m0,m1,m2,m3)=
+{ rm0=*m0; rm1=*m1; rm2=*m2; rm3=*m3 }
+resm(mat m0,m1,m2,m3,m4)=
+{ rm0=*m0; rm1=*m1; rm2=*m2; rm3=*m3; rm4=*m4 }
+resm(mat m0,m1,m2,m3,m4,m5)=
+{ rm0=*m0; rm1=*m1; rm2=*m2; rm3=*m3; rm4=*m4; rm5=*m5 }
+resm(mat m0,m1,m2,m3,m4,m5,m6)=
+{ rm0=*m0; rm1=*m1; rm2=*m2; rm3=*m3; rm4=*m4; rm5=*m5; rm6=*m6 }
+
+# retrieval of restriction matrices
+
+resm(int n)=
+{    if n==1 then rm0
+else if n==2 then rm1
+else if n==3 then rm2
+else if n==4 then rm3
+else if n==5 then rm4
+else if n==6 then rm5
+else if n==7 then rm6
+else null(0,0) # default case needed for type consistency
+fi fi fi fi fi fi fi
+}
+
+# get index of |i|-th group equal to |h| on stack
+get_index(grp h; int i)=
+{ for j=1 to nsubgr
+  do
+    if h==Maxsub(j)
+    then i=i-1
+    ; if i==0 then return j fi
+    fi
+  od
+  ; 0
+}
+
+Resmat(grp g,h;int k)=
+{ if !issimple(g) then error("Resmat only available for simple groups.") fi
+; if Lie_rank(g)<2 || Lie_rank(g)>8
+  then error("Resmat only available for rank=2,3,..8.")
+  fi
+; if !g==cur_group then store_subgroups(g) fi
+; loc i=get_index(h,k)
+; if i==0 then error("Not available as maximal subgroup") fi
+; if !g==cur_r_grp then store_restr_matrices(g) fi
+; resm(i)
+}
+
+Resmat(grp g,h)=Resmat(g,h,1)
+
+store_subgroups(grp g)=
+{ cur_group=g
+; if Lie_code(g)[1]<5
+  then
+    if Lie_code(g)[1]==1
+    then
+      if Lie_rank(g)==2 then subg(A1,A1) fi
+    ; if Lie_rank(g)==3 then subg(A2,B2,A1A1) fi
+    ; if Lie_rank(g)==4 then subg(A3,B2,A1A2) fi
+    ; if Lie_rank(g)==5 then subg(A4,A3,C3,A2,A1A2,A1A3,A2A2) fi
+    ; if Lie_rank(g)==6 then subg(A5,B3,A1A4,A2A3) fi
+    ; if Lie_rank(g)==7 then subg(A6,C4,D4,A1A3,A1A5,A2A4,A3A3) fi
+    ; if Lie_rank(g)==8 then subg(A7,B4,A2A2,A1A6,A2A5,A3A4) fi
+    fi
+  ; if Lie_code(g)[1]==2
+    then
+      if Lie_rank(g)==2 then subg(A1) fi
+    ; if Lie_rank(g)==3 then subg(G2) fi
+    ; if Lie_rank(g)==4 then subg(A1,A1A1) fi
+    ; if Lie_rank(g)==5 then subg(A1) fi
+    ; if Lie_rank(g)==6 then subg(A1) fi
+    ; if Lie_rank(g)==7 then subg(A3,A1,A1B2) fi
+    ; if Lie_rank(g)==8 then subg(A1) fi
+    fi
+  ; if Lie_code(g)[1]==3
+    then
+      if Lie_rank(g)==2 then subg(A1) fi
+    ; if Lie_rank(g)==3 then subg(A1,A1A1) fi
+    ; if Lie_rank(g)==4 then subg(A1,A1A1A1) fi
+    ; if Lie_rank(g)==5 then subg(A1,A1B2) fi
+    ; if Lie_rank(g)==6 then subg(A1,A1A3,A1B2) fi
+    ; if Lie_rank(g)==7 then subg(A1,A1B3) fi
+    ; if Lie_rank(g)==8 then subg(B2,A1,A1D4) fi
+    fi
+  ; if Lie_code(g)[1]==4
+    then
+      if Lie_rank(g)==3 then subg(A2,B2,A1A1) fi
+    ; if Lie_rank(g)==4 then subg(B3,A2,A1B2) fi
+    ; if Lie_rank(g)==5 then subg(B4,B2,A1B3,B2B2) fi
+    ; if Lie_rank(g)==6 then subg(B5,A1C3,A1B4,B2B3,A1A1A1) fi
+    ; if Lie_rank(g)==7 then subg(B6,C3,B2,G2,A1B5,B2B4,B3B3) fi
+    ; if Lie_rank(g)==8 then subg(B7,B4,A1C4,A1B6,B2B5,B3B4,B2B2) fi
+    fi
+  else      # Lie_code(g)[1]>=5
+      if g==E6 then subg(C4,F4,A2,G2,A2G2) fi
+    ; if g==E7 then subg(A2,A1,A1,A1F4,G2C3,A1G2,A1A1) fi
+    ; if g==E8 then subg(G2F4,C2,A1A2,A1,A1,A1) fi
+    ; if g==F4 then subg(A1,A1G2) fi
+    ; if g==G2 then subg(A1) fi
+  fi
+}
+
+l()=Lie_rank(cur_r_grp)
+e(int i)=    { loc t=null(l); t[i]=1; t }
+e1()=e(1)
+e2()=e(2)
+e3()=e(3)
+e4()=e(4)
+e5()=e(5)
+e6()=e(6)
+e7()=e(7)
+e8()=e(8)
+
+store_restr_matrices(grp g)=
+{ cur_r_grp=g
+; if Lie_code(g)[1]<5
+  then
+    if Lie_code(g)[1]==1 then resmata fi
+  ; if Lie_code(g)[1]==2 then resmatb fi
+  ; if Lie_code(g)[1]==3 then resmatc fi
+  ; if Lie_code(g)[1]==4 then resmatd fi
+  else resmatexc
+  fi
+}
+
+resmata()=
+{ if Lie_rank(g)==2 then resm([[1,1]],[[2,0]]) fi
+; if Lie_rank(g)==3 then resm([e1+e2,e3],[e2,e1+e3],[e1+e3,[1,2,1]]) fi
+; if Lie_rank(g)==4
+  then resm([e1,e2+e3,e4],[e1+e4,2*(e2+e3)],[e2+e3,e1+e2,e3+e4])
+  fi
+; if Lie_rank(g)==5
+  then resm([e1,e2,e3+e4,e5]
+	   ,[e2+e4,e1+e5,e2+2*e3+e4]
+	   ,[e1+e5,e2+e4,e3]
+	   ,[[0,1,3,2,2],[2,2,0,1,0]]
+	   ,[[1,0,1,0,1],[1,2,1,0,0],[0,0,1,2,1]]
+	   ,[e3,e1,e2+e3+e4,e5]
+	   ,[e2,e3+e4,e1+e2+e3,e4+e5]
+	   )
+  fi
+; if Lie_rank(g)==6
+  then resm([e1,e2,e3+e4,e5,e6]
+	   ,[e1+e6,e2+e5,2*(e3+e4)]
+	   ,[e3+e4,e1,e2+e3,e4+e5,e6]
+	   ,[e2+e3,e4+e5,e1+e2,e3+e4,e5+e6]
+	   )
+  fi
+; if Lie_rank(g)==7
+  then resm([e1,e2,e3,e4+e5,e6,e7]
+	   ,[e1+e7,e2+e6,e3+e5,e4]
+	   ,[e1+e7,e2+e6,e3+e5,e3+2*e4+e5]
+	   ,[e1+e3+e5+e7,e1+2*e2+e3,e3+2*e4+e5,e5+2*e6+e7]
+	   ,[e4,e1,e2,e3+e4+e5,e6,e7]
+	   ,[e3+e4,e5,e1,e2+e3,e4+e5+e6,e7]
+	   ,[e2+e3,e4,e5+e6,e1+e2,e3+e4+e5,e6+e7]
+	   )
+  fi
+; if Lie_rank(g)==8
+  then resm([e1,e2,e3,e4+e5,e6,e7,e8]
+	   ,[e1+e8,e2+e7,e3+e6,2*(e4+e5)]
+	   ,[[1,0,1,1,0,1,1,0]
+	    ,[0,1,1,0,1,1,0,1]
+	    ,[1,2,1,2,1,1,0,0]
+	    ,[0,0,1,1,2,1,2,1]
+	    ]
+	   ,[e4+e5,e1,e2,e3+e4,e5+e6,e7,e8]
+	   ,[e3+e4,e5+e6,e1,e2+e3,e4+e5,e6+e7,e8]
+	   ,[e2+e3,e4+e5,e6+e7,e1+e2,e3+e4,e5+e6,e7+e8]
+	   )
+  fi
+}
+
+resmatb()=
+{ if Lie_rank(g)==2 then resm([[4,3]]) fi
+; if Lie_rank(g)==3 then resm([e1+e3,e2]) fi
+; if Lie_rank(g)==4 then resm([[8,14,18,10]], [[2,2,4,1],[2,4,4,3]]) fi
+; if Lie_rank(g)==5 then resm([[10,18,24,28,15]]) fi
+; if Lie_rank(g)==6 then resm([[12,22,30,36,40,21]]) fi
+; if Lie_rank(g)==7
+  then resm([[1,0,1,1,0,2,1],[0,1,2,1,3,2,1],[1,2,1,3,2,2,1]]
+	   ,[[14,26,36,44,50,54,28]]
+	   ,[[2,2,4,2,2,4,1],[1,2,1,2,1,1,0],[0,0,2,2,4,4,3]]
+	   )
+  fi
+; if Lie_rank(g)==8 then resm([[16,30,42,52,60,66,70,36]]) fi
+}
+
+resmatc()=
+{ if Lie_rank(g)==2 then resm([[3,4]]) fi
+; if Lie_rank(g)==3 then resm([[5,8,9]], [[1,0,1],[2,4,4]]) fi
+; if Lie_rank(g)==4
+  then resm([[7,12,15,16]], [[1,0,1,2],[1,2,1,2],[1,2,3,2]])
+  fi
+; if Lie_rank(g)==5
+  then resm([[9,16,21,24,25]], [[1,0,1,0,1],[1,2,1,0,0],[0,0,2,4,4]])
+  fi
+; if Lie_rank(g)==6
+  then resm([[11,20,27,32,35,36]]
+           ,[[1,0,1,0,1,2],[0,0,1,2,1,2],[1,2,1,0,0,0],[0,0,1,2,3,2]]
+	   ,[[2,2,4,2,2,4],[0,0,1,1,2,1],[1,2,1,2,1,2]]
+	   )
+  fi
+; if Lie_rank(g)==7
+  then resm([[13,24,33,40,45,48,49]]
+	   ,[[1,0,1,0,1,0,1],[1,2,1,0,0,0,0],[0,0,1,2,1,0,0],[0,0,0,0,2,4,4]]
+	   )
+  fi
+; if Lie_rank(g)==8
+  then resm([[1,0,2,2,2,0,1,2],[1,4,3,4,5,8,7,6]]
+	   ,[[15,28,39,48,55,60,63,64]]
+	   ,[[1,0,1,0,1,0,1,2]
+	    ,[1,2,1,0,0,0,0,0]
+	    ,[0,0,1,2,1,0,0,0]
+	    ,[0,0,0,0,1,2,1,2]
+	    ,[0,0,0,0,1,2,3,2]
+	    ]
+	   )
+  fi
+}
+
+resmatd()=
+{ if Lie_rank(g)==3 then resm([e2+e1,e3],[e1,e2+e3],[e2+e3,[2,1,1]]) fi
+; if Lie_rank(g)==4
+  then resm([e4,e2,e1+e3]
+	   ,[[1,0,1,1],[1,3,1,1]]
+	   ,[[1,2,0,1],[0,1,1,0],[1,0,0,1]]
+	   )
+  fi
+; if Lie_rank(g)==5
+  then resm([e1,e2,e3,e4+e5]
+	   ,[[0,1,0,1,1],[2,2,4,1,1]]
+	   ,[e4+e5,e1,e2,e3+e3+e4+e5]
+	   ,[e1,[0,2,2,1,1],e3,e4+e5]
+	   )
+  fi
+; if Lie_rank(g)==6
+  then resm([e1,e2,e3,e4,e5+e6]
+	   ,[e1+2*e2+e3+2*e4+e6,e1+e3+e4,e2+e3+e6,e4+e5]
+	   ,[e5+e6,e1,e2,e3,2*e4+e5+e6]
+	   ,[e3+e4,e5+e6,e1,e2+e3,e4+e4+e5+e6]
+	   ,[[2,4,6,6,4,4],[1,2,1,2,0,1],[1,0,1,2,1,0]]
+	   )
+  fi
+; if Lie_rank(g)==7
+  then resm([e1,e2,e3,e4,e5,e6+e7]
+	   ,[[0,1,0,1,0,1,1],[1,0,0,1,3,1,1],[0,1,2,1,0,0,0]]
+	   ,[[2,2,3,1,3,1,1],[0,2,2,6,4,3,3]]
+	   ,[[0,3,4,3,5,1,1],[1,0,0,1,0,1,1]]
+	   ,[e6+e7,e1,e2,e3,e4,e5+e5+e6+e7]
+	   ,[e4+e5,e6+e7,e1,e2,e3+e4,e5+e5+e6+e7]
+	   ,[e1+e2,e3+e4,e5+e5+e6+e7,e2+e3,e4+e5,e6+e7]
+	   )
+  fi
+; if Lie_rank(g)==8
+  then resm([e1,e2,e3,e4,e5,e6,e7+e8]
+	   ,[e4+e5+e7,e3+e5+e6,e2+e8,e1+e3+2*e4+e5+2*e6+e7]
+	   ,[e1+2*e2+e3+2*e4+e5+2*e6+e8,e1+e3+e4,e2+e3+e5+e6,e4+e5+e8,e6+e7]
+	   ,[e7+e8,e1,e2,e3,e4,e5,e6+e6+e7+e8]
+	   ,[e5+e6,e7+e8,e1,e2,e3,e4+e5,e6+e6+e7+e8]
+	   ,[e3+e4,e5+e6,e7+e8,e1,e2+e3,e4+e5,e6+e6+e7+e8]
+	   ,[[0,0,1,1,2,1,0,1]
+	    ,[1,2,1,2,1,2,2,1]
+	    ,[0,1,1,0,1,1,1,0]
+	    ,[1,0,1,2,1,2,0,1]
+	    ]
+	   )
+  fi
+}
+
+resmatexc()=
+{ if cur_r_grp==E6
+  then resm([e3+e5,e1+e6,e3+2*e4+e5,e2]
+	   ,[e2,e4,e3+e5,e1+e6]
+	   ,[[2,1,2,5,5,2],[2,4,5,5,2,2]]
+	   ,[[2,1,2,5,2,2],[0,1,1,0,1,0]]
+	   ,[e1+e2+2*e3+e4,e2+e4+2*e5+e6,e1+e2+e4+e6,e3+e4+e5]
+	   )
+  fi
+; if cur_r_grp==E7
+  then resm([[4,7,9,11,10,6,6],[4,4,6,11,7,6,0]]
+	   ,[[34,49,66,96,75,52,27]]
+	   ,[[26,37,50,72,57,40,21]]
+	   ,[[0,1,0,2,1,2,1],e1,e3+e4,e5+e6+e2,e4+e5+e7]
+	   ,[[1,0,2,1,1,2,1]
+	    ,[0,1,0,1,1,0,0]
+	    ,[0,0,1,1,1,0,1]
+	    ,[1,0,0,1,1,1,0]
+	    ,[0,1,1,1,0,0,0]
+	    ]
+	   ,[[2,3,4,4,5,4,1],[2,1,2,4,4,1,0],[0,1,1,1,0,1,1]]
+	   ,[[4,8,10,18,12,8,6],[6,7,10,12,11,8,3]]
+	   )
+  fi
+; if cur_r_grp==E8
+  then resm([[1,0,2,1,1,2,1,1]
+	    ,[0,1,0,1,1,0,0,0]
+	    ,[0,0,0,0,1,1,1,0]
+	    ,[0,1,1,1,0,0,0,0]
+	    ,[1,0,0,1,1,1,0,0]
+	    ,[0,0,1,1,1,0,1,1]
+	    ]
+	   ,[[4,6,8,16,12,8,8,2],[4,6,8,9,8,7,3,3]]
+	   ,[[8,12,16,22,16,14,10,6],[2,3,4,8,6,4,4,1],[2,3,4,5,6,4,1,1]]
+	   ,[[72,106,142,210,172,132,90,46]]
+	   ,[[60,88,118,174,142,108,74,38]]
+	   ,[[92,136,182,270,220,168,114,58]]
+	   )
+  fi
+; if cur_r_grp==F4
+  then resm([[22,42,30,16]], [[4,4,4,2],[1,1,0,1],[0,1,1,0]])
+  fi
+; if cur_r_grp==G2 then resm([[6,10]]) fi
+}
+
+on gc

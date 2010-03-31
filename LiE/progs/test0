@@ -1,0 +1,61 @@
+print("Testing integer arithmetic")
+er(int i)=print("Error (in integer arithmetic) no:");print(i);print("")
+
+if 123456789123456789+876543210876543211!=10^18 then er(1) fi
+
+if 987654321987654321-876543210876543210!=11*(101*10001*100000001*100+1)
+then er(2)
+fi
+
+if 123456789987654321%34567899876543+
+   34567899876543*(123456789987654321/34567899876543)!=
+   123456789987654321
+then er(3)
+fi
+
+print("Testing vector arithmetic")
+er(int i)=print("Error (in vector arithmetic) no:");print(i);print("")
+
+if !([]+[]==[]) then er(1) fi
+
+if !([654321,-76543,0]+[123456,65432,-12345]==[777777,-11111,-12345])
+then er(2)
+fi
+
+if !([123,456,-789]^[234]-[122,457,-789,-1]==(1+[-1,10,0]+235-3))
+then er(3)
+fi
+
+if !([123,484]%44+44*([123,484]/44)==[123,484]) then er(4) fi
+
+print("Testing matrix arithmetic")
+er(int i)=print("Error (in matrix arithmetic) no:");print(i);print("")
+
+if !([[]]+[[]]==**[[]]) then er(1) fi
+if !([[(87654321+1),-87654321]]*[[ 87654321+1],[87654321]]==
+    [[2* 87654321+1]])
+then er(2)
+fi
+
+if !([[1,0],[-100,1]]+[[0,100],[100,0]]==[[1,1],[0,1]]^100) then er(3) fi
+
+if !([[123],[456]]%44+44*( [[123],[456]]/44)==[[123],[456]])
+then er(4)
+fi
+
+if !([[1,0,-1]]+[1,1,0]==[[1,-1,0],[0,0,1]]*[[3,-10,7],[2,-10,8],[1,1,0]])
+then er(5)
+fi
+
+print("Testing matrix/vector arithmetic")
+er(int i)=print("Error (in matrix/vector arithmetic) no:");print(i);print("")
+
+if !([[]]**[[]]==[[0]]) then er(1) fi
+
+if !([[12,-13],[1,0],[-19,-1]]*[10,4]==[10,4]*(* [[12,-13],[1,0],[-19,-1]]))
+then er(2)
+fi
+
+if !([[10,-10,3,0]]*(*[[9,8,-7,-6]])==[[[10,-10,3,0]*[9,8,-7,-6]]])
+then er(3)
+fi

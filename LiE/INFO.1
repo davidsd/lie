@@ -1,0 +1,100 @@
+@while()lieshell
+
+<loop clause>::= while <logical expression> do <series> od
+
+Evaluate logical expression, if non-zero execute series and repeat.
+Example:
+a=[1,3,7,5]; i=1; while (i<=size(a) && a[i] != 7) do i=i+1 od; i
+result: 3
+@&&(int,int)
+
+<logical_expression>::= <expression> && <expression>
+
+Logical AND operator, lazy in its right operand.
+First the left operand is evaluated. If it returns 0 (false) evaluation
+stops returning 0, otherwise the right operand is evaluated; if it is
+non-zero, 1 is returned, otherwise 0.
+@||(int,int)
+
+<logical_expression>::= <expression> || <expression>
+
+Logical OR operator, lazy in its right operand.
+First the left operand is evaluated. If it is non-zero (true) evaluation
+stops returning 1, otherwise the right operand is evaluated; if it is
+non-zero, 1 is returned, otherwise 0.
+@return()lieshell
+
+<statement>::= return
+	     | return <expression>
+
+Terminates the current function, returning the value of the expression,
+if present, and void otherwise.
+@/(pol,int)
+	  p/n
+Returns the polynomial with the coefficients of p divided by n.
+Examples	6X[8]/2 = 3X[8];	11X[30,4]/3 = 3X[30,4]
+@/(pol,vec)
+	  p/v 
+Returns the polynomial with the exponents of p divided position-wise by
+the entries of v.
+Examples	6X[8]/[2] = 6X[4];	11X[30,4]/[6,2] = 11X[5,2]
+divided by a.
+@*(pol,int)
+	  p*n
+Returns the polynomial with all exponents of p multiplied by n.
+Example		3X[5,2]*4 = 3X[20,8]
+@*(int,pol)
+	  n*p
+Returns the polynomial with the coefficients of p multiplied by n.
+Example		4*3X[5,2] = 12X[5,2]
+@*(pol,mat)
+	  p*m
+Returns the polynomial with all exponents of p multiplied to the right by m.
+Example         3X[5,2]*[[0,1],[3,0]] = 3X[6,5]
+@pol()silence
+Type indication for polynomials.  See 'polynomial'.
+@|(pol,vec)
+	  p|v
+Searches in polynomial p the term with exponent v and returns its coefficient
+(0 if term is not present).
+Example		(2X[1,2]+5X[8,7])|[8,7] = 5
+	  p|v = n
+Changes the coefficien of the term with exponent v in polynomial p into n
+(if necessary a term is created).
+Example		p=1X[0,0]; p|[1,2]=7  results in  p = 1X[0,0]+7*X[1,2]
+@+=(bin,bin)
+a+=b 		replaces a by a+b.
+a[i]+=b 	replaces a[i] by a[i]+b.
+a[i,j]+=b	replaces a[i,j] by a[i,j]+b.
+@+=(vec,int)
+a+=b appends integer b as final entry to vector a and stores the result in a.
+@+=(mat,vec)
+a+=b appends vector b as final row to matrix a and stores the result in a.
+@+=(tex,bin)
+a+=b appends text for integer b to string a and stores the result in a.
+@+=(tex,tex)
+a+=b appends string b to string a and stores the result in a.
+@fmt(bin,int)lieshell
+fmt(d,w) converts the integer d into a string of width at least w.
+if w < 0 then the output is left adjusted.
+if w > 0 then the output is right adjusted.
+@support(pol)polynomials
+support(p).   Returns the matrix whose rows are the exponents of p.
+@polynom(mat)polynomials
+polynom(m).   Returns the polynomial with coefficients 1 and with as
+exponents the rows of m. This is the same as `X m'.
+@row_index(mat,vec,int,int)array
+row_index(m,v,lb,ub)   Searches for i=lb, ..., ub whether m[i]==v.
+The first such i is returned, or 0 if none was found.
+@maxobjects()lieshell
+maxobjects N	Sets the maximum number of objects to N. The value N should
+be large enough to hold all objects of the computation (where each polynomial
+coefficient counts as separate object), but excessively large N could postpone
+garbage collection to the point that physical memory gets depleted.
+@maxnodes()lieshell
+maxnodes N	sets the maximum number of nodes (for storing programs) to N.
+@listvars()lieshell
+listvars generates a list of the variabes defined in this session of LiE.
+@listfuns()lieshell
+listfuns generates a list of the functions defined in this session of LiE.
+@finish()

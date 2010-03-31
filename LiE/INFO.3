@@ -1,0 +1,665 @@
+@center(grp)group
+center(g) [result: torals].   Returns a matrix whose rows
+   are semisimple elements or one parameter subgroups generating the
+   center of g. The center of a semisimple Lie group g (always assumed to
+   be simply connected in LiE) is a finite Abelian group isomorphic to the
+   quotient of the weight lattice by the root lattice (for reductive groups
+   the central torus is also included).
+@diagram(grp)group
+diagram(g).   Prints the Dynkin diagram of g, also indicating
+   the type of each simple component printed, and labeling the nodes as
+   done by Bourbaki (for the second and further simple components the
+   labels are given an offset so as to make them disjoint from earlier
+   labels). The labeling of the vertices of the Dynkin diagram prescribes
+   the order of the coordinates of root- and weight vectors used in LiE.
+@dim(grp)group
+dim(g).   Returns the dimension of the Lie group g; equals dim(adjoint(g),g).
+@Lie_code(grp)group
+Lie_code(g) [result: ints].   It is required that g be a simple
+   group or a torus; the function returns a vector [t,n] of size 2, such
+   that Lie_group(t,n)==g.
+@Lie_group(int,int)group
+Lie_group(t,n).   Returns a torus or a simple group as follows:
+
+    Lie_group(0,n)= Tn            Lie_group(4,n)= Dn  (n>=3)
+    Lie_group(1,n)= An  (n>=1)    Lie_group(5,n)= En  (6<=n<=8)
+    Lie_group(2,n)= Bn  (n>=2)    Lie_group(6,4)= F4
+    Lie_group(3,n)= Cn  (n>=2)    Lie_group(7,2)= G2
+
+   For any other numbers an error is indicated.  This function can be
+   useful in order to run examples over many Lie groups using a for loop.
+@Lie_rank(grp)group
+Lie_rank(g).   Returns the Lie rank of g; for simple groups
+   and tori this equals Lie_code(g)[2], while for composite groups it is
+   the sum of the Lie ranks of the component groups.
+@Cartan(grp)root_system
+Cartan(g) [result: lin(root; weight)].   Returns the Cartan matrix of g,
+   which is the transformation matrix from the root lattice to the weight
+   lattice, using the bases of fundamental roots and fundamental weights
+   respectively. Hence the i-th row of the Cartan matrix equals the i-th
+   fundamental root, expressed as weight vector. The labeling of the
+   fundamental roots is as indicated by diagram(g). When g is semisimple,
+   the (i,j)-entry of the Cartan matrix is <alpha_i,alpha_j>. If g contains
+   a central torus, so that the semisimple rank s of g is differs
+   from the Lie rank r, then the Cartan matrix is not square, as it is an
+   s x r matrix, but all entries beyond column s are zero.
+@Cartan(vec,vec,grp)root_system
+Cartan(alpha,beta,g) [alpha,beta: root].   Returns the `Cartan product'
+   <alpha,beta>, i.e., the integral value 2(alpha,beta)=(beta,beta),
+   where beta must be a root, and alpha is any root vector. [This is is not
+   an inner product because the function is not linear in beta. The function
+   is linear in alpha however. See also inprod and norm.
+@Cartan_type(mat,grp)root_system
+Cartan_type(R,g) [R: roots].   Returns the type of the fundamental Lie
+   subgroup whose root system is the minimal subsystem of the root system
+   of g  containing all the roots in R.  A basis of fundamental roots of this
+   subsystem may be obtained as fundam(R,g). See also closure and centr_type.
+@cent_roots(vec,grp)root_system
+cent_roots(t,g) [t: toral, result: roots].   Returns the matrix whose rows
+   form the set of all positive roots centralising the semisimple element
+   t of T (or the specified one parameter subgroup).
+   Here a root alpha is said to centralise t if t commutes with all elements
+   of the fundamental Lie subgroup of type A1 and closed subsystem of roots
+   {alpha,-alpha} Equivalently, alpha centralises t if and only if alpha
+   (which is a weight, and hence a map T->C ) maps t to 1.
+@cent_roots(mat,grp)root_system
+cent_roots(S,g) [S: torals, result: roots].   Returns the matrix whose
+   rows form the set of all positive roots centralising the semisimple
+   elements and/or one parameter subgroups represented by the rows of S.
+   This set is the intersection of all sets cent_roots(t,g),
+   with t traversing the rows of S. One may apply Cartan_type or fundam
+   to the result to obtain the type, respectively the set of fundamental
+   roots, of the centraliser. See also centr_type.
+@centr_type(vec,grp)group
+centr_type(t,g) [t: toral].   Returns the centraliser C_g(t) of the toral
+   element t (or of the specified one parameter subgroup); effectively only
+   the type is computed. See also cent_roots.
+@centr_type(mat,grp)group
+centr_type(S,g) [S: torals].   Returns the centraliser of the toral elements
+   and/or one parameter subgroups of T represented by the rows of S, i.e.,
+   the intersection of the groups centr_type(t,g) for t traversing the rows
+   of S.  This function can alternatively be computed as
+   Cartan_type(cent_roots(S,g),g).
+@closure(mat,grp)root_system
+closure(R,g) [R,result: roots].   Returns a basis of fundamental roots of
+   the minimal closed subsystem of the root system of g that contains all the
+   roots in R; the basis consisting of positive (for g) roots only is chosen.
+@det_Cartan(grp)root_system
+det_Cartan(g).   Returns the determinant of Cartan (g). This number is the
+   index of the root lattice in the weight lattice, and it is also the order
+   of the center of g. See also i_Cartan.
+@dom_weights(vec,grp)root_system
+dom_weights(lambda,g) [lambda: weight, result: weights].   Returns the set
+    of dominant weights lying under lambda. This is equal to the set of
+    weights occurring in dom_char (lambda,g).
+@fundam(mat,grp)root_system
+fundam(R,g) [R,result: roots].   Returns a basis of fundamental roots of
+   the minimal subsystem of the root system of g that contains all the roots
+   in R; the basis consisting of positive (for g) roots only is chosen.
+   The order in which the fundamental roots are returned is compatible with
+   the standard labeling for a root system of type Cartan_type(R,g).
+@high_root(grp)root_system
+high_root(g) [result: root].   Returns the highest root of the root system
+   of the group g, which must have exactly one simple component (for
+   otherwise there exists no highest root).  This root is the last row of
+   pos_roots(g). See also adjoint.
+@i_Cartan(grp)root_system
+i_Cartan(g) [result: lin(weight,root)].   Returns det_Cartan(g) times the
+   inverse of Cartan(g). The scalar factor det_Cartan(g) is required in order
+   to keep all matrix entries integral.  To transform an element of the root
+   lattice,  given as lambda in weight coordinates, to root coordinates,
+   compute  lambda*i_Cartan(g)/det_Cartan(g).
+@inprod(vec,vec,grp)root_system
+inprod(x,y,g) [x,y: root].   Returns the Weyl group invariant inner
+   product of x and y.  The inner product is normalised in such a way that
+   for each simple component of g the short roots x have inprod(x,x) = 2.
+@norm(vec,grp)root_system
+norm(alpha,g) [alpha: root].   Returns the norm inprod(alpha,alpha) of the
+   root vector alpha (it would be more accurate, but less convenient, to
+   call this the "squared norm"). When alpha is a root, the value is one of
+   {2, 4, 6}, and the inner product is chosen such that for each simple
+   component the short roots have norm 2. Note that this normalisation
+   differs from that used by Bourbaki in the case of groups of type Bn,
+   as the short roots are given norm 1 there.
+@n_pos_roots(grp)root_system
+n_pos_roots(g).   Returns the number of positive roots of the root system
+   of g, which is equal to n_rows(pos_roots(g)). The number of all roots
+   is twice as much, and can also be computed as dim(g)-Lie_rank(g).
+@pos_roots(grp)root_system
+pos_roots(g) [result: roots].   Returns a matrix whose rows are the positive
+   roots of g. The first rows are the fundamental roots (i.e., the top r rows
+   form the matrix id(r), and if g is simple the last row, which has
+   index n_pos_roots(g), is high_root(g).
+@Bruhat_desc(vec,grp)weyl_group
+Bruhat_desc(w,g) [w: Weyl word, result: Weyl words]. Returns the set of
+   Bruhat descendents of w, each one represented by a reduced Weyl word.
+   The Weyl word chosen for a Bruhat descendent is the unique one which
+   is obtainable by omitting one of the fundamental reflections occurring
+   in the Weyl word reduce(w).
+@Bruhat_desc(vec,vec,grp)weyl_group
+Bruhat_desc(v,w,g) [v,w: Weyl word, result: Weyl words].   Returns the set of
+   Bruhat descendents w' of w which lie above v in the Bruhat ordering. This
+   is useful in generating all elements between v and w in the Bruhat ordering.
+@Bruhat_leq(vec,vec,grp)weyl_group
+Bruhat_leq(v,w,g) [v,w: Weyl word].   Returns the value 1 if v<=w in the
+   Bruhat order, and 0 otherwise.
+@canonical(vec,grp)weyl_group
+canonical(w,g) [v,result: Weyl word].   Returns the canonical Weyl word
+   representing the same Weyl group element as w, which is the
+   lexicographically first reduced expression for that element.
+@canonical(mat,grp)weyl_group
+canonical(m,g) [m,result: Weyl words].   Returns the matrix obtained by
+   replacing each row w by canonical(w,g), filling out the row with zeros
+   if necessary. This is useful in combination with unique when handling sets
+   of Weyl words.
+@dominant(vec,grp)weyl_group
+dominant(lambda,g) [lambda,result: weight].   Returns the unique dominant
+    weight in the Weyl group orbit of the weight lambda.
+@dominant(mat,grp)weyl_group
+dominant(m,g) [m,result: weights].   Returns the matrix obtained by replacing
+   each row of m by the unique dominant weight in its Weyl group orbit.
+@dominant(pol,grp)weyl_group
+dominant(p,g) [p,result: weights].   Returns the polynomial obtained by
+   replacing each exponent of p by the unique dominant weight
+   in its Weyl group orbit.
+@exponents(grp)weyl_group
+exponents(g) [result: ints].   Returns the exponents of the given Lie group.
+   For composite groups the exponents are not necessarily increasing, as they
+   are grouped according to the simple factors of the group, with the
+   exponents for the central torus (all zeros) at the end.
+@filter_dom(mat,grp)weyl_group
+filter_dom(m,g) [m,result: weights].   Returns the matrix obtained by
+   casting away all rows of m that are not dominant weights.
+@filter_dom(pol,grp)weyl_group
+filter_dom(p,g)  [p,result: weights].   Returns the polynomial obtained by
+   casting away all terms of p whose exponents are not dominant weights.
+@KL_poly(vec,vec,grp)weyl_group
+KL_poly(x,y,g) [x,y: Weyl word, result: polynomial].   Returns
+   the Kazhdan-Lusztig polynomial P_{x,y}.
+@length(vec,grp)weyl_group
+length(w,g) [w: Weyl word].   Returns the length of the Weyl group element w.
+   We have length(w)<=size(w), with equality if and only if w == reduce(w,g).
+@long_word(vec,grp)weyl_group
+long_word(g) [result: Weyl word].   Returns a Weyl word for longest element
+   of the Weyl group.
+@l_reduce(vec,vec,grp)weyl_group
+l_reduce(l,w,g) [l: ints, w,result: Weyl word].   The set l determines
+   a subgroup W_l of W generated by the set of fundamental reflections
+   { r_i | i in l }. The function returns a Weyl word for the distinguished
+   representative (element of minimal length) of the left coset `W_l w'.
+   This Weyl word is obtained by deleting certain entries from w;
+   in particular, if w is already a reduced expression for the
+   distinguished representative, then w itself is returned.
+@lr_reduce(vec,vec,vec,grp)weyl_group
+lr_reduce(l,w,r,g) [l,r: ints, w,result: Weyl word].   The sets l and r
+   determine subgroups W_l and W_r of W generated by the sets of fundamental
+   reflections { r_i | i in l } respectively { r_i | i in r }.
+   The function returns a Weyl word for the distinguished representative
+   (element of minimal length) of the double coset `W_l w W_r'.  This Weyl
+   word is obtained by deleting certain entries from w; in particular, if w
+   is already a reduced expression for the distinguished representative,
+   then w itself is returned.
+@orbit(vec,mat)weyl_group
+orbit(v,M) [result: vectors].   Here v is a vector with an arbitrary
+   interpretation, and M is a matrix whose column size c equals size(v),
+   and whose row size is a multiple of c, say kc. We interpret M
+   as a collection of k square matrices of size c x c, vertically
+   concatenated. The function orbit attempts to compute the orbit of v under
+   the group generated by the collection of matrices, i.e., a minimal set V
+   of vectors containing v and closed under right multiplication by any
+   of the matrices in the given collection. As the orbit might be infinite,
+   and the algorithm has no means to detect this situation, it gives up
+   when more than 1000 vectors in the orbit have been computed.
+   For larger orbits, see orbit(n,v,M ), for Weyl group orbits see W_orbit.
+@orbit(int,vec,mat)weyl_group
+orbit(n,v,M) [result: vectors].   This function operates in the same way as
+   orbit(v,m), but n replaces the limit of 1000 elements in the orbit.
+   Warning: orbit uses allocates space at the beginning for the maximal
+   number n of vectors allowed in the orbit; therefore one shouldn't go
+   overboard on choosing the limit n.
+@reduce(vec,grp)weyl_group
+reduce(w,g) [w,result: Weyl word].   Returns a Weyl word of minimal length
+   representing the same element of W as w. This Weyl word is obtained by
+   deleting certain entries from w; in particular, if w is already a reduced
+   expression, then w itself is returned. See also canonical, l_reduce,
+   r_reduce and lr_reduce.
+@reflection(vec,grp)weyl_group
+reflection(vec alpha,g) [alpha: root, result: lin(weight,weight)].   Returns
+   the matrix of the reflection of the weight lattice in the hyperplane
+   perpendicular to the root ff, expressed on the basis of fundamental
+   weights. See also W_action .
+@R_poly(vec,vec,grp)weyl_group
+R_poly(x,y,g):  pol  [x,y: Weyl word, result: polynomial].   Returns the
+   value of the R-polynomial R_{x,y}.
+@r_reduce(vec,vec,grp)weyl_group
+r_reduce(w,r,g)  [w,result: Weyl word, r: ints].   The set r determines
+   a subgroup Wr of W generated by the set of fundamental reflections
+   { r_i | i in r }. The function returns a Weyl word for the distinguished
+   representative of the right coset `w W_r'.  This Weyl word is obtained
+   by deleting certain entries from w; in particular, if w is already a
+   reduced expression for the distinguished representative, then w itself
+   is returned.
+@W_action(vec,grp)weyl_group
+W_action(w,g) [w: Weyl word, result: lin(weight,weight)]. Returns the matrix
+   giving the action of the Weyl group element w in W on the weight lattice,
+   expressed on the basis of fundamental weights.
+   See also reflection, W_rt_action, and W_word.
+@W_action(vec,vec,grp)weyl_group
+W_action(lambda,w,g) [lambda,result: weight, w: Weyl word]. Returns the
+   weight that is the image `lambda.w' of the weight lambda under the action
+   of the Weyl group element w.
+@W_action(mat,vec,grp)weyl_group
+W_action(m,w,g) [m,result: weights, w: Weyl word].   Returns the matrix
+   obtained by replacing each row lambda of m by W_action(lambda,w,g);
+   this matrix is equal to m*W_action(w,g), while conversely W_action(w,g)
+   equals W_action(id(Lie_rank(g)),w,g).
+@W_action(pol,vec,grp)weyl_group
+W_action(p,w,g) [p,result: weights, w: Weyl word]. Returns the polynomial
+   obtained by replacing each exponent lambda of p by W_action(lambda,w,g);
+   this polynomial is equal to p*W_action(w,g).
+@W_orbit(vec,grp)weyl_group
+W_orbit(lambda,g) [lambda: weight, result: weights].   Returns the orbit
+    of the weight lambda under the Weyl group of g.
+@W_orbit(pol,grp)weyl_group
+W_orbit(pol p,g) [p,result: weights].   Returns the polynomial obtained by
+   summing over all terms `n X lambda' of p the polynomial
+   `n X W_orbit(lambda,g)'; the latter polynomial contains each weight in the
+   W-orbit of lambda exactly once and with coefficient n. This operation can
+   be used for instance to compute the full character polynomial of a
+   module from its dominant character module.
+@W_orbit_size(vec,grp)weyl_group
+W_orbit_size(lambda,g) [lambda: weight, result: weights].   Returns the size
+   of the orbit of the weight lamnda under the Weyl group of g. This size
+   can also be computed as W_order(g)/W_order(I,g), where I is a vector whose
+   entries indicate the positions at which the vector dominant(lambda) has
+   zero entries.
+@W_order(grp)weyl_group
+W_order(g).   (Weyl group order)  Returns the order of the Weyl group of g.
+@W_order(vec,grp)weyl_group
+W_order(I,g)  [I: ints].   Returns the order of the subgroup W_I of the Weyl
+   group of g generated by the set of fundamental reflections
+   { r_i | i in I }. This subgroup is the stabiliser subgroup of any weight
+   vector that has zero entries precisely at positions i for which i in I.
+@W_rt_action(vec,grp)weyl_group
+W_rt_action(w,g) [w: Weyl word, result: lin(root,root)]. (Weyl root action)
+   Returns the matrix giving the action of the Weyl group element w on the
+   root lattice, expressed on the basis of fundamental roots.
+@W_rt_action(vec,vec,grp)weyl_group
+W_rt_action(vec alpha,w,g) [alpha: root, w: Weyl word].   Returns the root
+   that is the image `alpha.w' of the root vector alpha under the Weyl group
+   element w.
+@W_rt_action(mat,vec,grp)weyl_group
+W_rt_action(m,w,g) [m,result: roots, w: Weyl word].   Returns the matrix
+   obtained by replacing each row alpha of m by W_rt_action(alpha,w,g);
+   this matrix is equal to m*W_rt_action(w,g), while conversely
+   W_rt_action(w,g) equals W_rt_action(id(Lie_rank(g)),w,g).
+@W_rt_orbit(vec,grp)weyl_group
+W_rt_orbit(alpha,g) [alpha: root, result: roots].  (Weyl root orbit)  Returns
+   the orbit of the root vector alpha under the Weyl group of g.
+@W_word(vec,grp)weyl_group
+W_word(lambda,g) [lambda: weight, result: Weyl word].   Returns a Weyl word
+   for a Weyl group element w whose action sends lambda to a dominant weight.
+   In fact, the canonical Weyl word for w is returned, while w is the
+   distinguished representative of its right coset `w W_S' , where W_S
+   is the stabiliser of dominant(lambda,g).
+@W_word(mat,grp)weyl_group
+W_word(m,g) [m: lin(weight,weight), result: Weyl word].   Returns the
+   canonical Weyl word for the Weyl group element w, if it exists, whose
+   action on the weight lattice is given by the square matrix m, i.e.,
+   such that W_action(w,g)==m.
+@class_ord(vec)partition
+class_ord(lambda) [lambda: partition].   Returns the order of the conjuga-
+   tion class in S_n of permutations of cycle type lambda (for n = |lambda|,
+   the sum of the parts of lambda).
+@from_part(vec)partition
+from_part(lambda) [lambda: partition, result: weight].   Let n be the number
+   of parts of lambda (trailing zeros are significant here) then the function
+   returns the weight for a group of type A_{n-1}  (i.e., for SL_n )
+   corresponding to lambda, expressed on the basis of fundamental weights.
+   See also to_part.
+@from_part(mat)partition
+from_part(m) [m: partitions, result: weights].   Replaces each row lambda
+   of m by from_part(lambda).
+@from_part(pol)partition
+from_part(p) [p: partitions, result: weights].   Replaces each exponent
+   lambda occurring in p by from_part(lambda).
+@next_part(vec)partition
+next_part(lambda) [lambda,result: partition].   Returns the next partition
+   of |lambda| in reverse lexicographic order. If lambda is the last one,
+   i.e., if lambda[1,1,...,1], it will return lambda again.
+   See also partitions.
+@next_perm(vec)partition
+next_perm(p) [p,result: ints].   Returns the next permutation of the entries
+   of p, in lexicographical order.  If p is the last such permutation, i.e.,
+   if the entries of p are decreasing, then p itself will be returned again.
+   If there are repetitions among the entries of p, then this function will
+   not attempt to permute identical entries, and in such cases it will take
+   fewer applications of next_perm to go from the weakly decreasing order to
+   the weakly increasing order. See also sym_orbit.
+@next_tabl(vec)partition
+next_tabl(T) [T,result: tableau].   Returns the lexicographically next
+   Young tableau of the same shape as T. See also tableaux.
+@next_tabl(vec)partition
+n_tabl(lambda) [lambda: partition].   Returns the number of Young tableaux
+   of shape lambda.
+@partitions(int)partition
+partitions(n) [result: partitions].   Returns a matrix whose rows are
+   the partitions of n in reverse lexicographic order, and extended
+   by zeros to length n. See also next_part.
+@print_tab(vec)partition
+print_tab(T) [T: tableau].   Displays the Young tableau encoded by T
+   in 2-dimensional form.
+@RS(vec)partition
+RS(p) [p: permutation, result: tableaux].   Returns the pair of Young
+   tableaux corresponding to the permutation p by the Robinson-Schensted
+   correspondence; the result is represented as a 2-row matrix.
+@RS(vec,vec)partition
+RS(P,Q)  [P,Q: tableau, result: permutation].   Returns the permutation
+   corresponding to the pair of Young tableaux P,Q (which must have
+   the same shape) by the Robinson-Schensted correspondence.
+@sign_part(vec)partition
+sign_part(lambda) [lambda: partition].   Returns the sign (+1 or 1) of
+   permutations of cycle type lambda.
+@shape(vec)partition
+shape(T) [T : tableau, result: partition].   Returns the shape of
+   the Young tableau T.
+@sym_char(vec)partition
+sym_char(lambda) [lambda: partition,  result: character].   (Symmetric
+   group character)  Let n=|lambda|; the function returns the character
+   polynomial of the character chi_lambda of the symmetric group S_n
+   corresponding to the partition lambda.
+@sym_char(vec,vec)partition
+sym_char(lambda,mu) [lambda,mu: partition].   We should have |lambda|=|mu|;
+   the function returns the (integral) value chi_lambda(mu) of the character
+   of the symmetric group S_{|mu|} corresponding to  on the conjugacy class
+   with cycle type lambda.
+@sym_orbit(vec)partition
+sym_orbit(v) [result: vectors].   (Symmetric group orbit)  Let n = size(v).
+   The symmetric group on n letters acts on Z^n by permuting the coordinates;
+   the function returns the orbit of v in this action. The rows of the result
+   are ordered lexicographically. See also next_perm.
+@tableaux(vec)partition
+tableaux(lambda)  [lambda: partition, result: tableaux].   Returns a matrix
+   whose rows encode the set of all Young tableaux of shape lambda,
+   in lexicographic order.
+@to_part(vec)partition
+to_part(v) [v: weight, result: partition].   Let n = size(v), then v is
+   interpreted as a weight for a group of type A_n (i.e., for SL_{n+1});
+   the expression of that weight in n+1 partition coordinates is returned.
+   When v is dominant, this is a partition with n+1 parts. See also from_part.
+@to_part(mat)partition
+to_part(m) [m: weights, result: partitions].   Replaces each row v of m
+   by to_part(v).
+@to_part(pol)partition
+to_part(p) [p: weights, result: partitions].   Replaces each exponent v
+   occurring in p by to_part(v).
+@trans_part(vec)partition
+trans_part(lambda) [lambda,result: partition].   Returns the transpose
+   partition of lambda.
+@Adams(int,vec,grp)represent
+Adams(n,lambda,g) [lambda: weight, result: decomposition].   Returns the
+   decomposition polynomial of the virtual module obtained by applying the
+   n-th Adams operator to V_lambda. The result is the same as that computed
+   by `v_decomp(dom_char(lambda,g)*n,g)'. This function is used in plethysm,
+   sym_tensor, and alt_tensor.
+@Adams(int,pol,grp)represent
+Adams(n,p,g) [p: decomposition, result: decomposition].   This is like
+   Adams(n,lambda,g), but with the irreducible module V_lambda replaced by
+   the module with decomposition polynomial p.
+@adjoint(grp)represent
+adjoint(g) [result: decomposition].   Returns the decomposition polynomial
+   of the adjoint representation of g. For simple groups the adjoint
+   representation is irreducible and the result therefore has a single term;
+   the highest weight of the adjoint representation can then be obtained as
+   expon(adjoint(g),1). Since the non-zero weights of the adjoint
+   representation are precisely the roots, this highest weight is equal to
+   high_root(g)*Cartan(g).
+@alt_tensor(int,vec,grp)represent
+alt_tensor(n,lambda,g) [lambda: weight, result: decomposition].
+   (alternating tensor power)  Returns the decomposition polynomial of
+   the n-th alternating tensor power (also called n-th exterior power)
+   of V_lambda. See also sym_tensor and plethysm.
+@alt_tensor(int,pol,grp)represent
+alt_tensor(n,p,g) [p,result: decomposition].   This is similar to
+   alt_tensor(n,lambda,g), but with the irreducible module V_lambda
+   replaced by the module with decomposition polynomial p.
+@alt_dom(pol,vec,grp)represent
+alt_dom(p,w,g)  [p,result: weights, w: Weyl word].   (alternating dominant)
+   Starting with the polynomial p, the following operation is repeatedly
+   applied, taking for i the successive entries of the Weyl word w, reading
+   from left to right.  For any term `n X^lambda' let
+   lambda[i]=<lambda,alpha_i> be its coefficient of omega_i; the term is
+   unaltered if lambda[i] >= 0, it is removed if lambda[i] = -1, and it is
+   replaced by `n X(W_action(lambda+omega_i,[i])-omega_i)' if lambda[i] <= -2.
+   (The exponent of the latter monomial could also have been written as
+   `W_action(lambda,[i])-alpha_i' or as `lambda-(lambda[i]+1)*alpha_i'.)
+   As a result of the operation for i, the coefficient lambda[i] is made
+   non-negative without affecting the image Demazure(p,[i]) under the
+   Demazure operator, and hence also without changing alt_W_sum(p).
+   The final result of alt_dom should be the same when taking for w
+   different reduced Weyl words for the same element of W .
+@alt_dom(vec,vec,grp)represent
+alt_dom(lambda,w,g) [lambda: weight, w: Weyl word, result: weights].
+   Returns `alt_dom(X lambda,w,g)'.
+@alt_dom(pol,grp)represent
+alt_dom(p,g) [p,result: weights].   This is equivalent to (but somewhat
+   faster than) `alt_dom(p,long_word(g),g)'. The resulting polynomial q
+   can be charaterised as the unique polynomial with only dominant exponents
+   which has alt_W_sum(q)==alt_W_sum(p). If p is a character polynomial,
+   then q is the corresponding decomposition polynomial.
+@alt_dom(vec,grp)represent
+alt_dom(lambda,g) [lambda: weight, result: weights].   Returns
+   `alt_dom(X lambda,g)'.
+@alt_W_sum(pol,grp)represent
+alt_W_sum(p,g) [p,result: weights].   (alternating Weyl sum) Returns
+   the alternating Weyl sum J(p) of p, defined by
+
+       sum_{w in W} (-1)^length(w) W_action(X rho * p,w)*X(-rho)
+
+   where rho=all_one(Lie_rank) (the half sum of the positive roots).
+   The number of terms generated is a multiple of W_order(g), so it may not
+   be wise to call this function if W_order(g) is very large.
+@alt_W_sum(vec,grp)represent
+alt_W_sum(lambda,g) [lambda: weight, result: weights].  Returns
+   `alt_W_sum(X lambda,g)'.
+@branch(vec,grp,mat,grp)represent
+branch(lambda,h,m,g) [lambda: weight, m: lin(weight,weight), result:
+   decomposition].   Returns the decomposition polynomial of the restriction
+   to h of V_lambda, with respect to the restriction matrix m. Here the
+   matrix m is such that any weight mu (expressed on the basis of fundamental
+   weights for g), when restricted to the maximal torus of h becomes the
+   weight mu*m (expressed on the basis of fundamental weights for h). In many
+   cases the restriction matrix can be obtained by use of res_mat. See also
+   decomp for a warning for in case memory overflow should occur during branch.
+@branch(pol,grp,mat,grp)represent
+branch(p,h,m,g) [p,result: decomposition, m: lin(weight,weight)].   This is
+   like branch(lambda,h,m,g), but with the irreducible module V_lambda
+   replaced by the module with decomposition polynomial p.
+@collect(pol,grp,mat,grp)represent
+collect(p,h,l,g) [p,result: decomposition, l: lin(weight,weight)].   This
+   function attempts to perform the inverse operation of branch, namely to
+   reconstruct a g-module from its restriction to h. This is not generally
+   possible unless the restriction matrix is invertible, and in particular
+   g and h have the same Lie rank. When a restriction matrix m has an
+   inverse l, and the h-module with decomposition polynomial p is equal to
+   some restriction branch(q,h,m,g) of a g-module via m, then the
+   decomposition polynomial q can be computed as collect(p,h,l,g).
+@collect(pol,grp,mat,int,grp)represent
+collect(p,h,l,n,g) [p,result: decomposition, l: lin(weight,weight)].   An
+   obvious limitation of the previous version of collect is that it is only
+   applicable for restriction matrices which are invertible over the integers;
+   certain restriction matrices are invertible, but only over the rational
+   numbers.  For these cases this extended version is provided.  Since LiE
+   cannot handle matrices with rational entries, a common denominator n of
+   all the entries of the inverse restriction matrix has to be factored out
+   and passed as a separate argument, so that the scaled inverse matrix l
+   has only integer coefficients. For all weights to which l is applied
+   the image should be divisible by n, or else an error will be reported;
+   apart from this, the extended version of collect operates in the same way
+   as the previous one.
+@contragr(vec,grp)represent
+contragr(lambda,g)  [lambda,result: weight].   Yields the highest weight
+   of the contragredient (or dual) representation V_lambda^* of V_lambda,
+   which equals dominant (-lambda,g).
+@contragr(pol,grp)represent
+contragr(p,g) [p,result: decomposition].   Returns the decomposition
+   polynomial of the contragredient representation of the module with
+   decomposition polynomial p.
+@decomp(pol,grp)represent
+decomp(d,g) [d: dominant, result: decomposition].   Returns the decomposition
+   polynomial of the g-module with dominant character polynomial d; it is the
+   inverse operation of dom_char.  See also v_decomp.
+@Demazure(pol,vec,grp)represent
+Demazure(p,w,g) [p,result: weights, w: Weyl word].   Starting with the
+   polynomial p, repeatedly apply the Demazure operator M_{alpha_i}, taking
+   for i the successive entries of the Weyl word w, from left to right.
+   The final result of Demazure should be the same when taking for w
+   different reduced Weyl words for the same element of W.
+@Demazure(vec,vec,grp)represent
+Demazure(lambda,w,g) [lambda: weight, w: Weyl word, result: weights].
+   Returns `Demazure(X lambda,w,g)'.
+@Demazure(pol,grp)represent
+Demazure(p,g) [p,result: weights].   This is an abbreviation for the call
+   Demazure (p,long_word(g),g).  The resulting polynomial q can be
+   characterised as the unique W-invariant polynomial which has J(q) = J(p).
+   In fact, due to Demazure's character formula, q is the character
+   polynomial of the module with decomposition polynomial p (provided all
+   exponents of p were dominant).
+@Demazure(vec,grp)represent
+Demazure(lambda,g) [lambda: weight, w: Weyl word, result: weights].
+   Returns `Demazure (X lambda,g)'.
+@dim(vec,grp)represent
+dim (lambda,g) [lambda: weight].   Returns the dimension of the
+   representation V_lambda.
+@dim(pol,grp)represent
+dim(p,g) [p: decomposition].   Returns the dimension of the g-module with
+   decomposition polynomial p.
+@dom_char(vec,grp)represent
+dom_char(lambda,g) [lambda: weight, result: dominant].   (dominant character)
+   Returns the polynomial representing the dominant part of the character
+   of the g-module V_lambda.
+@dom_char(vec,vec,grp)represent
+dom_char(lambda,mu,g) [lambda,mu: weight].   Returns the coefficient
+   of `X mu' in the character polynomial of V_lambda.  The weight lambda
+   should be dominant, but mu may be any weight.
+@dom_char(pol,grp)represent
+dom_char(p,g) [p: decomposition, result: dominant].   This is like
+   dom_char(lambda,g), but with the irreducible module V_lambda
+   replaced by the module with decomposition polynomial p.
+@dom_char(pol,vec,grp)represent
+dom_char(p,mu,g) [p: decomposition, mu:weight, result: dominant].   Returns
+   the coefficient of `X mu' in the character polynomial of the module
+   with decomposition polynomial p.
+@LR_tensor(vec,vec)represent
+LR_tensor(lambda,mu) [lambda,mu: partition result: decomposition].
+   (Littlewood-Richardson tensor) The partitions lambda and mu, which must
+   have the same number of parts, say n, are interpreted as dominant weights
+   for the group SL_n of type A_{n-1}, expressed in partition coordinates.
+   The decomposition polynomial of the tensor product of the corresponding
+   highest weight modules is computed using the Littlewood-Richardson rule,
+   where the exponents in the result are again expressed in partition
+   coordinates.  Note that extending lambda and mu by zeros can be
+   significant: partitions with more than n non-zero parts may appear as
+   exponents of new terms, while existing terms will reappear in zero-
+   extended form. The total number of non-zero parts is bounded however by
+   the number in lambda and mu taken together, so eventually the number of
+   terms will stabilise; the limiting case corresponds to the decomposition
+   of the Young product of the representations corresponding to
+   lambda and mu in the representation theory of the symmetric groups.
+@LR_tensor(pol,pol)represent
+LR_tensor(p,q) [p,q,result: decomposition].   Returns the decomposition poly-
+   nomial of the tensor produce of the SL_n-modules with respective decompo-
+   sition polynomials p and q, computed using the Littlewood-Richardson rule;
+   all polynomials have their exponents in partition coordinates.
+@max_sub(grp)represent
+max_sub(g).   Returns the types of the maximal proper subgroups of g,
+   represented textually as comma separated list; the list is obtained
+   from a small database. The group g must be simple and of rank <= 8.
+   Types for which more than one conjugacy class of subgroups exist have
+   repeated occurrences in the list. See also res_mat.
+@max_sub(int,grp)
+max_sub(i,g).   Returns the type of the i-th maximal proper subgroup of g
+   in the list max_sub(g).  The group g must be simple and of rank <= 8.
+   See also res_mat.
+@plethysm(vec,vec,grp)represent
+plethysm(lambda,mu,g) [lambda: partition, mu: weight, result: decomposition].
+   Returns the decomposition polynomial of the g-module of the plethysm of
+   of V_m  corresponding to the partition lambda.
+@plethysm(vec,pol,grp)represent
+plethysm(lambda,p,g) [lambda: partition, p,result: decomposition]. This is
+   similar to plethysm(lambda,mu,g), but with the irreducible module V_mu
+   replaced by the module with decomposition polynomial p.
+@p_tensor(int,vec,grp)represent
+p_tensor(n,lambda,g)  [lambda: weight, result: decomposition]. Returns the
+   decomposition polynomial of the n-th tensor power of V_lambda.
+@p_tensor(int,pol,grp)represent
+p_tensor(n,p,g) [p,result: decomposition].   Returns the decomposition
+   polynomial of the n-th tensor power of the g-module with decomposition
+   polynomial p.
+@res_mat(mat,grp)represent
+res_mat(R,g) [R: roots, result: lin(weight,weight)]. (restriction matrix)
+   It is assumed that the set R consists of roots forming a fundamental basis
+   for a closed subsystem Psi of the root system Phi of g (as for instance
+   obtained by a call of closure).  The function returns the restriction
+   matrix for the fundamental Lie subgroup of g with root system Psi.
+   Although the function checks whether the rows of R are indeed roots,
+   and whether they are linearly independent, it does not test whether they
+   are positive roots and whether their mutual inner products are
+   non-positive; these conditions should be met however in order to obtain
+   a result suitable for use with branch and collect.  If the number m of
+   roots is strictly less than the Lie rank r of g, and one is in fact
+   interested in the semisimple subgroup with the given root system Psi,
+   then it suffices to simply discard the final r-m columns.
+@res_mat(grp,grp)represent
+res_mat(h,g) [result: lin(weight,weight)].   Returns the restriction matrix
+   for the maximal proper subgroup with type h of g, which is obtained from
+   a small database. The group g must be simple and of rank <= 8.  In case
+   more than one non-conjugate subgroups of type h exist, the restriction
+   matrix for the first one in the list is returned; in case no such subgroup
+   exists, an error is reported.  See also max_sub.
+@res_mat(grp,int,grp)represent
+res_mat(h,i,g) [result: lin(weight,weight)].   Returns the restriction matrix
+   for the i-th maximal proper subgroup with type h of g,  which is obtained
+   from a small database.  The group g must be simple and of rank <= 8.
+   See also max_sub.
+@spectrum(vec,vec,grp)represent
+spectrum(lambda,t,g) [lambda: weight, t: toral].   Let n be the last entry
+   of t, then the toral element t will act in any representation of g as
+   a diagonalisable transformation all of whose eigenvalues are n-th roots
+   of unity. The function returns a polynomial in one indeterminate, in which
+   the coefficient of the monomial `X i' is the multiplicity of the
+   eigenvalue zeta^i in the action of the toral element t on the irreducible
+   g-module V_lambda, where i is the complex number e^{2*pi/n}.
+@spectrum(pol,vec,grp)represent
+spectrum(p,t,g) [p: decomposition, t: toral].   This is similar to
+   spectrum (lambda,t,g),  but with the irreducible module V_lambda
+   replaced by the module with decomposition polynomial p.
+@sym_tensor(int,vec,grp)represent
+sym_tensor(n,lambda,g) [lambda: weight, result: decomposition].
+   (symmetric tensor power)  Returns the decomposition polynomial of the n-th
+   symmetric tensor power of V_lambda.  See also alt_tensor and plethysm.
+@sym_tensor(int,pol,grp)represent
+sym_tensor(n,p,g) [p,result: decomposition].   This is similar to
+   sym_tensor(n,,g), but with the irreducible module V_lambda
+   replaced by the module with decomposition polynomial p.
+@tensor(vec,vec,grp)represent
+tensor(lambda,mu,g) [lambda,mu: weight, result: decomposition].   Returns
+   the decomposition polynomial of the tensor product of V_lambda and V_mu.
+   For groups of type A_n, see also LR_tensor.
+@tensor(vec,vec,vec,grp)represent
+tensor(lambda,mu,nu,g) [lambda,mu,nu: weight].   Returns the coefficient
+   of the monomial `X nu' in tensor(lambda,mu,g).
+@tensor(pol,pol,grp)represent
+tensor(p,q,g) [p,q,result: decomposition].   Returns the decomposition
+   polynomial of the tensor product of the g-modules with respective
+   decomposition polynomials p and q.
+@tensor(pol,pol,vec,grp)represent
+tensor(p,q,nu,g) [p,q,result: decomposition, nu: weight].   Returns the
+   coefficient of the monomial `X nu' in tensor(p,q,g).
+@v_decomp(pol,grp)represent
+v_decomp(d,g) [d: dominant, result: decomposition].   (virtual decomposition)
+   Returns the virtual decomposition polynomial of the virtual g-module with
+   dominant character polynomial d.
+@v_decomp(vec,grp)represent
+v_decomp(lambda,g) [lambda: weight, result: decomposition].   This is
+   equivalent to v_decomp(X lambda,g).

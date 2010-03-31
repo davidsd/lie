@@ -1,0 +1,61 @@
+print("recursie tests")
+f(int i)=if i==0 then 0 else 1+f(i-1) fi
+if 50!=f(50) then print("error een") fi
+f(int i)=g(i)
+g(int i)=if i==0 then 0 else 1+f(i-1) fi
+if 30!=f(30) then print("error twee") fi
+f(int i)=if i==0 then 0 else if i==1 then 1 else f(i-1)+f(i-2) fi fi
+if f(10)!=55 then print("error drie") fi
+ag=30
+f()=loc af=ag-1; if af==0 then 1 else 1+g fi
+g()=loc ag=af-1; if ag==0 then 1 else 1+f fi
+if f!=30 then print("error vier") fi
+f(int n)=if n==1 then 1 else 2*f(f(n/2)) fi
+if f(2^12)!=2^12 then print("error vijf") fi
+f(vec v)=if size(v)==0 then 0 else f(v-size(v))+v[size(v)] fi
+g(mat m)=if n_rows(m)==0 then 0 else g(m-n_rows(m))+f(m[n_rows(m)]) fi
+if g(id(10))!=10 then print("error zes") fi
+
+print("loop tests")
+if 10!=for i=1 to 10 do i od then print("error een") fi
+k=0
+for i=1 to 2 do for j=0 to 2 do for l=-1 to 3 do k=k+1 od od od
+if k!=2*3*5 then print("error twee") fi
+k=0; l=0
+for k=1 to 2 do for k=0 to 1 do l=l+1 od od
+if k!=0||l!=4 then print("error drie") fi
+k=0
+for v row id(3) do for i in v do for j=1 to i do k=k+1 od od od
+if k!=3 then print("error vier") fi
+k=0
+for i=1 to 2 do for i=0 to 1 do k=k+1 od; for i=2 to 3 do k=k+1 od od
+if k!=8 then print("error vijf") fi
+k=0
+for i=1 to 0 do k=k+1 od
+if k!=0 then print("error zes") fi
+k=0
+for i=for i=-1000 to -999 do k=k+1; 2000 od\
+to for i=2000 to 2001 do k=k+1;i od\
+do k=k+1 od
+if k!=6 then print("error zeven") fi
+k=0; l=0
+for k=for l=1 to 2 do k=k+1;k od to for k=2 to 3 do l=l+1; k od do l=10*l od
+if k!=2||l!=200 then print("error acht") fi
+k=0; m=[[1,2,3],[4,5,6]]
+for m row m do for m in m do k=k+m od od
+if k!=21 then print("error negen") fi
+k=0
+for v row m do for v row m do\
+if v==m[2] then break else k=k+v[1]+v[2]+v[3] fi od od
+if k!=12 then print("error tien") fi
+k=0
+for i=for i=1 to 3 do if i>1 then break(i) else 0 fi od to 2 do k=k+1 od
+if k!=1 then print("error elf") fi
+k=0
+for i=1 to for i=1 to 3 do if i>1 then break(i) else 1 fi od do k=k+1 od
+if k!=2 then print("error twaalf") fi
+
+print("recursie in combinatie met loop tests")
+k=0
+f(int n)=k=k+1; if n>0 then for n=1 to n do f(n-1) od else 1 fi
+
