@@ -24,6 +24,7 @@ int main(void)
   FILE *indexpt,*learnpt;
   learn_index_tp learn;
 
+  memset(&learn, 0, sizeof(learn));
   strcpy(indexfil,INDEXFIL); strcpy(learnfil,LEARNFIL);
   learnpt=fopen(learnfil,readmode);
   if (learnpt==NULL)
