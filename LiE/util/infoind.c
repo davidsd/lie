@@ -70,6 +70,7 @@ int main(void)
   FILE *indexpt,*infopt;
   info_index_tp info; /* current info record */
 
+  memset(&info, 0, sizeof(info));
   strcpy(indexfil,INDEXFIL);
   indexpt=fopen(indexfil,writemode);
   if (indexpt==NULL)
